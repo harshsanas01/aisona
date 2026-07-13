@@ -5,7 +5,12 @@ from typing import Union
 from fastapi import FastAPI
 
 from carecall_application.ports.repositories import CallRepository, ChunkRepository, PatientRepository
-from carecall_application.use_cases import AskQuestionUseCase, GetCallUseCase, ListCallsUseCase
+from carecall_application.use_cases import (
+    AskQuestionUseCase,
+    GetCallUseCase,
+    IngestCallUseCase,
+    ListCallsUseCase,
+)
 from carecall_llm.grounding import HeuristicAnswerabilityGate
 from carecall_llm.providers import MockAnswerGenerator, OpenAIAnswerGenerator
 from carecall_persistence.in_memory import (
@@ -27,6 +32,7 @@ class Container:
     ask_question: AskQuestionUseCase
     list_calls: ListCallsUseCase
     get_call: GetCallUseCase
+    ingest_call: IngestCallUseCase
 
 
 def build_container() -> Container:
@@ -58,6 +64,13 @@ def build_container() -> Container:
         retrieval_service, answer_generator, answerability_gate, default_limit=config.TOP_K,
     )
 
+    def _refresh_retrieval_index() -> None:
+        retrieval_service.refresh(chunk_repository.all_chunks())
+
+    ingest_call = IngestCallUseCase(
+        call_repository, chunk_repository, build_chunks, on_ingested=_refresh_retrieval_index,
+    )
+
     return Container(
         call_repository=call_repository,
         patient_repository=patient_repository,
@@ -65,6 +78,7 @@ def build_container() -> Container:
         ask_question=ask_question,
         list_calls=ListCallsUseCase(call_repository),
         get_call=GetCallUseCase(call_repository),
+        ingest_call=ingest_call,
     )
 
 

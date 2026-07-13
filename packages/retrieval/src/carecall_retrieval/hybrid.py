@@ -59,7 +59,13 @@ class HybridRetriever(RetrievalService):
         self.default_top_k = default_top_k
         self.reranker = reranker or IdentityReranker()
 
-        self.chunks: List[Chunk] = list(chunks)
+        self.refresh(chunks)
+
+    def refresh(self, chunks: List[Chunk]) -> None:
+        """Rebuild the shared vector space and scorers from an updated chunk
+        list. Called after ingestion so a newly ingested call is searchable
+        immediately, without restarting the process."""
+        self.chunks = list(chunks)
         self._vectorizer, self._matrix = build_vectorizer(self.chunks)
         self._chunk_index = {chunk.chunk_id: i for i, chunk in enumerate(self.chunks)}
         self._lexical = LexicalScorer(self._vectorizer, self.chunks)

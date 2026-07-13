@@ -6,7 +6,7 @@ from carecall_domain import TranscriptDataError
 
 from . import config
 from .lifespan import build_container, lifespan
-from .routes import calls, health, questions
+from .routes import calls, health, ingestion, questions
 
 app = FastAPI(title='CareCall Insight', version='0.1.0', lifespan=lifespan)
 
@@ -28,6 +28,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 app.include_router(health.router)
 app.include_router(calls.router)
 app.include_router(questions.router)
+app.include_router(ingestion.router)
 
 
 if __name__ == '__main__':
