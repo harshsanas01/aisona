@@ -1,4 +1,4 @@
-.PHONY: setup backend web dev test eval
+.PHONY: setup backend web dev test test-contract eval migrate
 
 setup:
 	python3 -m venv .venv
@@ -22,7 +22,13 @@ dev:
 	@echo "Run 'make backend' and 'make web' in separate terminals"
 
 test:
-	. .venv/bin/activate && python -m pytest apps/api/tests -v
+	. .venv/bin/activate && python -m pytest apps/api/tests tests/contract -v
+
+test-contract:
+	. .venv/bin/activate && python -m pytest tests/contract -v
 
 eval:
 	. .venv/bin/activate && python scripts/evaluate.py
+
+migrate:
+	. .venv/bin/activate && cd packages/persistence && alembic upgrade head
