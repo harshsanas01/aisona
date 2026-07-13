@@ -1,13 +1,10 @@
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from carecall_api.retrieval import TranscriptRetriever
+from carecall_api.data_loader import load_transcripts
 
-from app.retrieval import TranscriptRetriever
-from app.data_loader import load_transcripts
-
-
-TRANSLATIONS = load_transcripts(Path(__file__).resolve().parents[2] / 'data' / 'carecall_transcripts.json')
+REPO_ROOT = Path(__file__).resolve().parents[3]
+TRANSLATIONS = load_transcripts(REPO_ROOT / 'data' / 'raw' / 'carecall_transcripts.json')
 RETRIEVER = TranscriptRetriever(TRANSLATIONS)
 
 

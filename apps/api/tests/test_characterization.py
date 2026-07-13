@@ -5,12 +5,8 @@ upcoming monorepo/layered-architecture refactor can be verified against a
 known-good baseline instead of relying on memory of "it worked before".
 """
 from fastapi.testclient import TestClient
-import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-from app.main import app
+from carecall_api.main import app
 
 client = TestClient(app)
 

@@ -7,6 +7,9 @@ __pycache__/
 node_modules/
 dist/
 *.pyc
-backend/data/embeddings_cache*
+*.egg-info/
 data/embeddings_cache*
 *.tsbuildinfo
+artifacts/
+.ruff_cache/
+.mypy_cache/

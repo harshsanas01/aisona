@@ -10,7 +10,7 @@ class TranscriptDataError(ValueError):
 
 
 def load_transcripts(path: Path | None = None) -> TranscriptCorpus:
-    target = path or Path(__file__).resolve().parents[2] / 'data' / 'carecall_transcripts.json'
+    target = path or Path(__file__).resolve().parents[4] / 'data' / 'raw' / 'carecall_transcripts.json'
     if not target.exists():
         raise TranscriptDataError(f'Missing transcript data file: {target}')
 

@@ -1,15 +1,12 @@
 import json
-import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'backend'))
-
-from app.answer_service import AnswerService
-from app.data_loader import load_transcripts
+from carecall_api.answer_service import AnswerService
+from carecall_api.data_loader import load_transcripts
 
 ROOT = Path(__file__).resolve().parents[1]
-TRANSCRIPTS_PATH = ROOT / 'data' / 'carecall_transcripts.json'
-QUESTIONS_PATH = ROOT / 'data' / 'carecall_questions.json'
+TRANSCRIPTS_PATH = ROOT / 'data' / 'raw' / 'carecall_transcripts.json'
+QUESTIONS_PATH = ROOT / 'data' / 'evaluation' / 'carecall_questions.json'
 
 corpus = load_transcripts(TRANSCRIPTS_PATH)
 service = AnswerService(corpus)

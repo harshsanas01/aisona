@@ -97,4 +97,4 @@ def ask(request: AskRequest) -> AskResponse:
 
 
 if __name__ == '__main__':
-    uvicorn.run('app.main:app', host='0.0.0.0', port=BACKEND_PORT, reload=False)
+    uvicorn.run('carecall_api.main:app', host='0.0.0.0', port=BACKEND_PORT, reload=False)

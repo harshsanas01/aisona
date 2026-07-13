@@ -2,11 +2,14 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv(Path(__file__).resolve().parents[2] / '.env')
+# apps/api/src/carecall_api/config.py -> repo root is 4 levels up
+REPO_ROOT = Path(__file__).resolve().parents[4]
 
-DATA_DIR = Path(__file__).resolve().parents[2] / 'data'
-TRANSCRIPTS_PATH = DATA_DIR / 'carecall_transcripts.json'
-QUESTIONS_PATH = DATA_DIR / 'carecall_questions.json'
+load_dotenv(REPO_ROOT / '.env')
+
+DATA_DIR = REPO_ROOT / 'data'
+TRANSCRIPTS_PATH = DATA_DIR / 'raw' / 'carecall_transcripts.json'
+QUESTIONS_PATH = DATA_DIR / 'evaluation' / 'carecall_questions.json'
 
 ANSWER_MODE = os.getenv('ANSWER_MODE', 'mock').lower()
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '')

@@ -93,7 +93,7 @@ AI coding tools helped accelerate scaffolding, test generation, and implementati
 
 ### Likely hands-on questions
 
-- Where is retrieval ranking implemented? In [backend/app/retrieval.py](backend/app/retrieval.py).
+- Where is retrieval ranking implemented? In [apps/api/src/carecall_api/retrieval.py](apps/api/src/carecall_api/retrieval.py).
 - How is an exact citation mapped back to transcript turns? Through the chunk metadata and the turn range stored in the citation objects.
 - What happens when OpenAI fails? The app falls back to the mock answer mode.
 - How would you ingest a new call? By adding a new JSON record and extending the ingestion pipeline.
