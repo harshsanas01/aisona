@@ -1,0 +1,412 @@
+{
+  "meta": {
+    "description": "Fictional check-in call transcripts between Amy, the CareCall assistant at Harborview Senior Day Center, and program participants. Created for a coding exercise - every person, name, and event is fictional.",
+    "center": "Harborview Senior Day Center",
+    "assistant_name": "Amy",
+    "note": "This file is a small sample. The production corpus is ~50,000 calls and grows by ~2,000 per week. Do not assume the whole corpus fits in a single prompt.",
+    "call_count": 21,
+    "date_range": ["2026-05-26", "2026-06-23"]
+  },
+  "calls": [
+    {
+      "call_id": "call_001",
+      "date": "2026-05-26",
+      "patient": { "id": "P-1003", "name": "Rosa Kim", "age": 75 },
+      "duration_seconds": 412,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Rosa! It's Amy calling from Harborview for your check-in. How are you doing today?" },
+        { "speaker": "participant", "text": "Oh, good morning, Amy. I'm doing all right, thank you." },
+        { "speaker": "assistant", "text": "Glad to hear it. How have you been feeling this week?" },
+        { "speaker": "participant", "text": "Mostly fine. My right knee has been aching a bit when I climb the stairs, though. It started sometime last week." },
+        { "speaker": "assistant", "text": "I'm sorry to hear about your knee. Is the ache there all the time, or mainly on the stairs?" },
+        { "speaker": "participant", "text": "Mainly the stairs. Sitting and walking on flat ground are fine." },
+        { "speaker": "assistant", "text": "Okay. Would you like me to let the nurse at the center know, so she can take a look on your next visit?" },
+        { "speaker": "participant", "text": "Yes, that would be good. It's not terrible, but I'd rather have it checked." },
+        { "speaker": "assistant", "text": "I'll pass it along. And how is your garden doing? Last time you mentioned the tomatoes." },
+        { "speaker": "participant", "text": "Oh, the tomatoes are coming in beautifully. I was out there all Saturday morning." },
+        { "speaker": "assistant", "text": "That sounds lovely. Anything else you need before Thursday's visit?" },
+        { "speaker": "participant", "text": "No, I think that's everything. Thank you for calling, dear." },
+        { "speaker": "assistant", "text": "My pleasure, Rosa. Take it easy on those stairs, and we'll see you Thursday!" }
+      ]
+    },
+    {
+      "call_id": "call_002",
+      "date": "2026-05-27",
+      "patient": { "id": "P-1002", "name": "Frank Delgado", "age": 81 },
+      "duration_seconds": 305,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Frank, it's Amy from Harborview checking in. How are you today?" },
+        { "speaker": "participant", "text": "Morning. Can't complain. Warm one out there already." },
+        { "speaker": "assistant", "text": "It sure is - they're saying mid-eighties this afternoon. Are you keeping cool at home?" },
+        { "speaker": "participant", "text": "I've got the fan going. I'm fine." },
+        { "speaker": "assistant", "text": "Good. Are you coming in tomorrow? I hear it's taco day at lunch." },
+        { "speaker": "participant", "text": "Tacos, huh? Then I'll be there." },
+        { "speaker": "assistant", "text": "Ha! I'll make a note. Anything on your mind this week?" },
+        { "speaker": "participant", "text": "Not really. My daughter Maria is driving up Sunday, so I've got that to look forward to." },
+        { "speaker": "assistant", "text": "That's wonderful. Have a great visit with Maria, and we'll see you tomorrow." },
+        { "speaker": "participant", "text": "Will do. Bye now." }
+      ]
+    },
+    {
+      "call_id": "call_003",
+      "date": "2026-05-28",
+      "patient": { "id": "P-1001", "name": "Margaret Chen", "age": 78 },
+      "duration_seconds": 388,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Margaret! Amy here from Harborview for your daily check-in. How are you feeling?" },
+        { "speaker": "participant", "text": "Good morning, Amy. I'm well, thank you." },
+        { "speaker": "assistant", "text": "Anything new since we last spoke?" },
+        { "speaker": "participant", "text": "Yes, actually. I saw Dr. Patel on Monday, and she started me on a new blood pressure pill. Lisinopril, it's called." },
+        { "speaker": "assistant", "text": "Thank you for letting me know. Have you started taking it already?" },
+        { "speaker": "participant", "text": "I take it in the morning with breakfast. Today was the third day." },
+        { "speaker": "assistant", "text": "Great. Any side effects so far - anything that feels unusual?" },
+        { "speaker": "participant", "text": "No, nothing so far. It's just one more pill on the tray." },
+        { "speaker": "assistant", "text": "Good to hear. I'll make sure the nurse knows about the new medication. How's the book club book coming along?" },
+        { "speaker": "participant", "text": "Slowly! It's four hundred pages. But I like it." },
+        { "speaker": "assistant", "text": "That's a commitment. Talk tomorrow, Margaret." },
+        { "speaker": "participant", "text": "Thank you, Amy. Goodbye." }
+      ]
+    },
+    {
+      "call_id": "call_004",
+      "date": "2026-05-29",
+      "patient": { "id": "P-1002", "name": "Frank Delgado", "age": 81 },
+      "duration_seconds": 356,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Frank, it's Amy. How are you doing today?" },
+        { "speaker": "participant", "text": "Honestly? A little annoyed." },
+        { "speaker": "assistant", "text": "Oh no. What happened?" },
+        { "speaker": "participant", "text": "The van. It was forty minutes late picking me up on Tuesday, and this morning it was late again. I missed the start of exercise class both times." },
+        { "speaker": "assistant", "text": "I'm sorry, Frank. That shouldn't be happening. I'll report it to the transportation coordinator today." },
+        { "speaker": "participant", "text": "I'd appreciate that. I don't like sitting by the window waiting, wondering if they forgot me." },
+        { "speaker": "assistant", "text": "That's completely fair. I'll make sure someone follows up with you about it. Aside from the van, how are you feeling?" },
+        { "speaker": "participant", "text": "Fine, fine. No complaints about anything else." },
+        { "speaker": "assistant", "text": "All right. I'll get that ride issue reported today. Enjoy the rest of your day, Frank." },
+        { "speaker": "participant", "text": "Thanks, Amy. Bye." }
+      ]
+    },
+    {
+      "call_id": "call_005",
+      "date": "2026-06-01",
+      "patient": { "id": "P-1004", "name": "Walter Simmons", "age": 84 },
+      "duration_seconds": 441,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Walter, this is Amy from Harborview. How was your weekend?" },
+        { "speaker": "participant", "text": "Quiet. It's always quiet around here since June passed. Just me and the TV." },
+        { "speaker": "assistant", "text": "I know weekends can feel long. Did you get out at all?" },
+        { "speaker": "participant", "text": "Saturday I walked to the corner store. Sunday I mostly stayed in." },
+        { "speaker": "assistant", "text": "How about meals - were you able to cook for yourself?" },
+        { "speaker": "participant", "text": "I'll be honest with you, some days I just have coffee for lunch. Cooking for one is no fun." },
+        { "speaker": "assistant", "text": "I understand, and I'm glad you told me. You know lunch at the center is there for you every weekday, right?" },
+        { "speaker": "participant", "text": "Oh, I eat plenty when I'm at the center. The meatloaf on Thursdays is the best thing all week." },
+        { "speaker": "assistant", "text": "I'll tell the kitchen you said so. Would it help if we looked into meal deliveries for the weekends?" },
+        { "speaker": "participant", "text": "Maybe. Let me think about it." },
+        { "speaker": "assistant", "text": "Of course. I'll check in about it next week. See you at the center tomorrow, Walter." },
+        { "speaker": "participant", "text": "See you, Amy." }
+      ]
+    },
+    {
+      "call_id": "call_006",
+      "date": "2026-06-02",
+      "patient": { "id": "P-1005", "name": "Dorothy Nguyen", "age": 79 },
+      "duration_seconds": 297,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Dorothy! Amy from Harborview here. How are you today?" },
+        { "speaker": "participant", "text": "Wonderful, Amy! My granddaughter Lily is flying in from Portland on Friday." },
+        { "speaker": "assistant", "text": "Oh, how exciting! How long is she staying?" },
+        { "speaker": "participant", "text": "A whole week. We're going to bake, and I'm taking her to the pier." },
+        { "speaker": "assistant", "text": "That sounds like a perfect week. Was there anything you wanted to ask me?" },
+        { "speaker": "participant", "text": "Yes - will the center be offering flu shots again this fall? I'd like to get mine there like last year." },
+        { "speaker": "assistant", "text": "Yes, the fall flu shot clinic usually runs in October. I'll make sure you get the sign-up sheet as soon as it's announced." },
+        { "speaker": "participant", "text": "Perfect. That's all from me, dear." },
+        { "speaker": "assistant", "text": "Enjoy getting ready for Lily's visit, Dorothy. Talk soon!" },
+        { "speaker": "participant", "text": "Bye-bye, Amy." }
+      ]
+    },
+    {
+      "call_id": "call_007",
+      "date": "2026-06-03",
+      "patient": { "id": "P-1001", "name": "Margaret Chen", "age": 78 },
+      "duration_seconds": 324,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Margaret, it's Amy checking in. How are you doing?" },
+        { "speaker": "participant", "text": "Doing fine, Amy, thank you." },
+        { "speaker": "assistant", "text": "Last week you mentioned the new blood pressure medication. How is that going?" },
+        { "speaker": "participant", "text": "The lisinopril? I've been taking it every morning with breakfast. No problems so far." },
+        { "speaker": "assistant", "text": "That's good news. Any dizziness, swelling, or coughing since starting it?" },
+        { "speaker": "participant", "text": "No, none of that. Although - is morning the best time to take it? A friend of mine takes hers at night." },
+        { "speaker": "assistant", "text": "That's a good question for the nurse or your pharmacist - I'd rather not guess on medication timing. Want me to ask the nurse to call you?" },
+        { "speaker": "participant", "text": "No rush. I'll ask her myself on Thursday." },
+        { "speaker": "assistant", "text": "Perfect. Anything else today?" },
+        { "speaker": "participant", "text": "No, that's all. Thank you, Amy." },
+        { "speaker": "assistant", "text": "Have a lovely day, Margaret." }
+      ]
+    },
+    {
+      "call_id": "call_008",
+      "date": "2026-06-04",
+      "patient": { "id": "P-1007", "name": "Betty Park", "age": 82 },
+      "duration_seconds": 372,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Betty, this is Amy from Harborview. How are you today?" },
+        { "speaker": "participant", "text": "Hello, Amy. I'm getting used to my new walker. The physical therapist gave it to me on Monday." },
+        { "speaker": "assistant", "text": "How is it going so far?" },
+        { "speaker": "participant", "text": "All right in the hallway and the kitchen. I'm still nervous in the bathroom, though. The floor gets slippery after my shower, and I'm afraid of slipping." },
+        { "speaker": "assistant", "text": "That's a very reasonable concern, Betty. Have you thought about grab bars by the shower?" },
+        { "speaker": "participant", "text": "My son said he could put some in. He just hasn't gotten around to it yet." },
+        { "speaker": "assistant", "text": "Would it help if I flagged it for our home safety checklist, so someone follows up?" },
+        { "speaker": "participant", "text": "Yes, please do. Better safe than sorry." },
+        { "speaker": "assistant", "text": "Done. In the meantime, a rubber bath mat can help a lot too." },
+        { "speaker": "participant", "text": "I have one somewhere in the closet. I'll dig it out today." },
+        { "speaker": "assistant", "text": "Perfect. Take it slow, Betty, and we'll check in soon." },
+        { "speaker": "participant", "text": "Thank you, dear. Goodbye." }
+      ]
+    },
+    {
+      "call_id": "call_009",
+      "date": "2026-06-08",
+      "patient": { "id": "P-1001", "name": "Margaret Chen", "age": 78 },
+      "duration_seconds": 401,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Margaret, it's Amy for your check-in. How was your weekend?" },
+        { "speaker": "participant", "text": "It was all right, but I wanted to mention something. Twice this week I felt dizzy when I stood up quickly." },
+        { "speaker": "assistant", "text": "I'm glad you told me. Can you describe it - did the room spin, or did you feel lightheaded?" },
+        { "speaker": "participant", "text": "Lightheaded, like the blood rushed out of my head. I sat back down and it passed in a minute." },
+        { "speaker": "assistant", "text": "Did you fall or stumble either time?" },
+        { "speaker": "participant", "text": "No, no. I was near the armchair both times, so I just sat down." },
+        { "speaker": "assistant", "text": "Okay. Since you recently started the new blood pressure medication, I'm going to flag this for the nurse today so she can follow up with you." },
+        { "speaker": "participant", "text": "You think it's the pill?" },
+        { "speaker": "assistant", "text": "I can't say - that's for the nurse and Dr. Patel to look into. But it's worth them knowing. In the meantime, please stand up slowly, especially in the morning." },
+        { "speaker": "participant", "text": "All right, I can do that." },
+        { "speaker": "assistant", "text": "The nurse will call you today, Margaret. Thank you for telling me." },
+        { "speaker": "participant", "text": "Thank you, Amy. Bye now." }
+      ]
+    },
+    {
+      "call_id": "call_010",
+      "date": "2026-06-09",
+      "patient": { "id": "P-1008", "name": "Samuel Rivera", "age": 80 },
+      "duration_seconds": 366,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Samuel! Amy from Harborview. How are you doing?" },
+        { "speaker": "participant", "text": "Morning, Amy. Pretty good, but my sugar's been running high." },
+        { "speaker": "assistant", "text": "Thank you for telling me. How high, and when did you notice?" },
+        { "speaker": "participant", "text": "It was over two hundred two mornings in a row, Saturday and Sunday. We had my grandson's birthday over the weekend, and I had more cake than I should have." },
+        { "speaker": "assistant", "text": "Birthdays will do that. How is it today?" },
+        { "speaker": "participant", "text": "Better - one sixty-five this morning. I'm back on my salads." },
+        { "speaker": "assistant", "text": "Good. If the morning numbers stay above two hundred, will you let the nurse know right away?" },
+        { "speaker": "participant", "text": "I will. My daughter keeps an eye on the log too." },
+        { "speaker": "assistant", "text": "Perfect. And how was art class last week? I heard you're painting the harbor." },
+        { "speaker": "participant", "text": "It's coming along. The water is hard to get right, but Miss Elena says my boats are the best in the class." },
+        { "speaker": "assistant", "text": "I don't doubt it. Keep at those salads, Samuel - talk tomorrow." },
+        { "speaker": "participant", "text": "Ha! Bye, Amy." }
+      ]
+    },
+    {
+      "call_id": "call_011",
+      "date": "2026-06-10",
+      "patient": { "id": "P-1003", "name": "Rosa Kim", "age": 75 },
+      "duration_seconds": 428,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Rosa, it's Amy checking in. How are you today?" },
+        { "speaker": "participant", "text": "Oh, a little worn out, to be honest." },
+        { "speaker": "assistant", "text": "I'm sorry to hear that. What's going on?" },
+        { "speaker": "participant", "text": "Two things. My knee got worse after I spent the weekend in the garden - I probably overdid it. And I keep waking up around three in the morning, and then I just lie there until the sun comes up." },
+        { "speaker": "assistant", "text": "That sounds exhausting. How many nights has the early waking been happening?" },
+        { "speaker": "participant", "text": "Most of last week. By the afternoon I'm nodding off in my chair." },
+        { "speaker": "assistant", "text": "Let's make sure both of these get looked at. You have your appointment on Thursday, right? Please bring up the knee and the early waking." },
+        { "speaker": "participant", "text": "I will. I wrote them on my list already." },
+        { "speaker": "assistant", "text": "Wonderful. Until then, maybe give the garden a rest and let the knee settle." },
+        { "speaker": "participant", "text": "The weeds will win, Amy, but all right." },
+        { "speaker": "assistant", "text": "Just for a few days! Rest up, Rosa, and we'll talk tomorrow." },
+        { "speaker": "participant", "text": "Thank you, dear. Goodbye." }
+      ]
+    },
+    {
+      "call_id": "call_012",
+      "date": "2026-06-11",
+      "patient": { "id": "P-1005", "name": "Dorothy Nguyen", "age": 79 },
+      "duration_seconds": 288,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Dorothy, it's Amy. How are you feeling today?" },
+        { "speaker": "participant", "text": "A little scratchy, to tell the truth. I've had a dry cough since yesterday afternoon." },
+        { "speaker": "assistant", "text": "I'm sorry to hear that. Any fever, or is it just the cough?" },
+        { "speaker": "participant", "text": "No fever. I checked twice. Just the tickle in my throat." },
+        { "speaker": "assistant", "text": "Okay. Are you eating and drinking normally?" },
+        { "speaker": "participant", "text": "Oh yes. I've been having tea with honey. It helps some." },
+        { "speaker": "assistant", "text": "Good. If a fever shows up or the cough gets worse, will you call the center right away?" },
+        { "speaker": "participant", "text": "I will, I promise." },
+        { "speaker": "assistant", "text": "Are you still planning to go to choir practice this week?" },
+        { "speaker": "participant", "text": "I might skip it. Nobody wants to sit next to the coughing lady." },
+        { "speaker": "assistant", "text": "They'd forgive you - but rest is a fine idea. Feel better, Dorothy. I'll check on you tomorrow." },
+        { "speaker": "participant", "text": "Thank you, Amy. Bye-bye." }
+      ]
+    },
+    {
+      "call_id": "call_013",
+      "date": "2026-06-12",
+      "patient": { "id": "P-1002", "name": "Frank Delgado", "age": 81 },
+      "duration_seconds": 341,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Frank, it's Amy. How are you today?" },
+        { "speaker": "participant", "text": "Doing all right. Say, I need some help with an appointment." },
+        { "speaker": "assistant", "text": "Of course. Which appointment?" },
+        { "speaker": "participant", "text": "The foot doctor - the podiatrist. I'm scheduled for June eighteenth, but Maria can't drive me that day anymore. Can it be moved to the week after?" },
+        { "speaker": "assistant", "text": "Let me note that: reschedule the podiatry appointment from June eighteenth to sometime the following week. I'll pass it to the scheduling team today, and they'll call you to confirm the new date." },
+        { "speaker": "participant", "text": "That works. And tell them afternoons are better for me." },
+        { "speaker": "assistant", "text": "Afternoons - noted. Anything else, Frank?" },
+        { "speaker": "participant", "text": "Nope. The van's been on time this week, by the way." },
+        { "speaker": "assistant", "text": "That's great to hear! I'll pass that along too. Bye, Frank." },
+        { "speaker": "participant", "text": "Bye now." }
+      ]
+    },
+    {
+      "call_id": "call_014",
+      "date": "2026-06-15",
+      "patient": { "id": "P-1007", "name": "Betty Park", "age": 82 },
+      "duration_seconds": 315,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Betty! Amy here. How was your weekend?" },
+        { "speaker": "participant", "text": "Very good news, Amy. My son came over Saturday and put in the grab bars - one by the shower and one next to the toilet." },
+        { "speaker": "assistant", "text": "That's wonderful! Do they feel sturdy?" },
+        { "speaker": "participant", "text": "Solid as a rock. I feel so much safer in there now. I even found that bath mat you mentioned." },
+        { "speaker": "assistant", "text": "I'm really glad, Betty. And how is the walker treating you?" },
+        { "speaker": "participant", "text": "We're getting along. I walked to the mailbox and back with it yesterday, no trouble at all." },
+        { "speaker": "assistant", "text": "Look at you! That's great progress. Anything you need this week?" },
+        { "speaker": "participant", "text": "Not a thing. I'm doing fine, dear." },
+        { "speaker": "assistant", "text": "Music to my ears. See you at the center, Betty!" },
+        { "speaker": "participant", "text": "Bye, Amy." }
+      ]
+    },
+    {
+      "call_id": "call_015",
+      "date": "2026-06-16",
+      "patient": { "id": "P-1001", "name": "Margaret Chen", "age": 78 },
+      "duration_seconds": 437,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Margaret, it's Amy for your check-in. How are you doing?" },
+        { "speaker": "participant", "text": "Well - it happened again, Amy. Yesterday evening I got dizzy in the kitchen. I nearly lost my balance, but I grabbed the counter in time." },
+        { "speaker": "assistant", "text": "I'm glad you caught yourself. Are you hurt at all?" },
+        { "speaker": "participant", "text": "No, I didn't go down. It just scared me. I stood there holding the counter for a minute until it passed." },
+        { "speaker": "assistant", "text": "Thank you for telling me right away. That's the third episode this month, isn't it?" },
+        { "speaker": "participant", "text": "Yes. And I keep wondering - could it be the new pill? The dizziness only started after the lisinopril." },
+        { "speaker": "assistant", "text": "That's exactly the kind of pattern the nurse needs to hear about. I'm flagging this as important, and she will call you today. Please don't change any doses on your own, though - wait for her guidance." },
+        { "speaker": "participant", "text": "All right, I won't change anything. I'll wait for her call." },
+        { "speaker": "assistant", "text": "In the meantime, please sit down the moment you feel it coming, and keep a hand on the counter or a chair in the kitchen." },
+        { "speaker": "participant", "text": "I will. Thank you, Amy." },
+        { "speaker": "assistant", "text": "The nurse will call before noon, Margaret. Talk tomorrow." },
+        { "speaker": "participant", "text": "Goodbye, dear." }
+      ]
+    },
+    {
+      "call_id": "call_016",
+      "date": "2026-06-17",
+      "patient": { "id": "P-1004", "name": "Walter Simmons", "age": 84 },
+      "duration_seconds": 359,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Walter, it's Amy from Harborview. How are you doing today?" },
+        { "speaker": "participant", "text": "Oh, getting by. My right hearing aid keeps cutting out. I think it's the battery, but I put a new one in and it still does it." },
+        { "speaker": "assistant", "text": "That's frustrating. Would you bring it with you on Thursday? The front desk can send it out for a check." },
+        { "speaker": "participant", "text": "I'll put it by my keys so I don't forget." },
+        { "speaker": "assistant", "text": "Perfect. How have you been otherwise - how are the nights?" },
+        { "speaker": "participant", "text": "Short. I'm up before dawn most days. Maybe four hours a night is all I get." },
+        { "speaker": "assistant", "text": "That's not much rest. Is something waking you - noise, worry, needing the bathroom?" },
+        { "speaker": "participant", "text": "No, my eyes just open at four thirty like there's a rooster in the room. Been that way for a while now." },
+        { "speaker": "assistant", "text": "I hear you, Walter. I'd like the nurse to talk with you about it on Thursday, if that's all right - poor rest wears on everything else." },
+        { "speaker": "participant", "text": "Sure, I'll talk to her. Can't hurt." },
+        { "speaker": "assistant", "text": "Thank you. Bring that hearing aid, and we'll see you Thursday." },
+        { "speaker": "participant", "text": "Will do. Bye, Amy." }
+      ]
+    },
+    {
+      "call_id": "call_017",
+      "date": "2026-06-18",
+      "patient": { "id": "P-1006", "name": "Harold Okafor", "age": 77 },
+      "duration_seconds": 302,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Harold! It's Amy from Harborview. How are you today?" },
+        { "speaker": "participant", "text": "Chipper as ever, Amy. Though I did something silly this morning." },
+        { "speaker": "assistant", "text": "Oh? What happened?" },
+        { "speaker": "participant", "text": "I stood at the sink and couldn't for the life of me remember whether I'd taken my morning pills. So I didn't take any, in case I'd be doubling up." },
+        { "speaker": "assistant", "text": "That was the safer choice than risking a double dose. Does that happen often?" },
+        { "speaker": "participant", "text": "Now and then. My memory's fine, mind you - it's just that the pills all look the same and the mornings all look the same." },
+        { "speaker": "assistant", "text": "Do you use a pillbox - one of those cases with the days of the week on it?" },
+        { "speaker": "participant", "text": "Never have. I just keep the bottles on the windowsill." },
+        { "speaker": "assistant", "text": "A weekly pillbox might solve exactly this - you can see at a glance whether today's compartment is empty. Should I ask the nurse to set you up with one?" },
+        { "speaker": "participant", "text": "You know what, my niece said the same thing. Maybe you're both right." },
+        { "speaker": "assistant", "text": "Great minds! I'll mention it to the nurse. Anything else today?" },
+        { "speaker": "participant", "text": "No, that's my confession for the day. Bye, Amy." }
+      ]
+    },
+    {
+      "call_id": "call_018",
+      "date": "2026-06-19",
+      "patient": { "id": "P-1005", "name": "Dorothy Nguyen", "age": 79 },
+      "duration_seconds": 276,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Dorothy! Amy here. How's that cough doing?" },
+        { "speaker": "participant", "text": "Gone, completely gone. I woke up Wednesday and it had packed its bags." },
+        { "speaker": "assistant", "text": "That's wonderful news! No fever at any point?" },
+        { "speaker": "participant", "text": "None. It was just one of those things." },
+        { "speaker": "assistant", "text": "I'm glad. Are you back to choir, then?" },
+        { "speaker": "participant", "text": "Rehearsal is tonight, and I'll be there. We're doing the summer picnic songs." },
+        { "speaker": "assistant", "text": "Ah, the picnic! It's coming up on the twenty-seventh, right?" },
+        { "speaker": "participant", "text": "That's the one. Lily helped me pick out a sun hat before she flew home." },
+        { "speaker": "assistant", "text": "You'll be the best-dressed singer there. Have fun tonight, Dorothy." },
+        { "speaker": "participant", "text": "Thank you, Amy. Bye-bye!" }
+      ]
+    },
+    {
+      "call_id": "call_019",
+      "date": "2026-06-19",
+      "patient": { "id": "P-1008", "name": "Samuel Rivera", "age": 80 },
+      "duration_seconds": 254,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Samuel! Amy from Harborview. How are the numbers looking?" },
+        { "speaker": "participant", "text": "Back where they belong. One thirties every morning this week." },
+        { "speaker": "assistant", "text": "Excellent! What do you think did the trick?" },
+        { "speaker": "participant", "text": "No more birthday cake, for one. And Gus next door and I started walking twenty minutes after dinner." },
+        { "speaker": "assistant", "text": "A walking partner makes all the difference. How's the harbor painting coming?" },
+        { "speaker": "participant", "text": "Finished it Tuesday. Miss Elena wants to hang it by the front office." },
+        { "speaker": "assistant", "text": "A gallery debut! I'll be sure to see it. Keep those walks up, Samuel." },
+        { "speaker": "participant", "text": "Will do, Amy. Bye now." }
+      ]
+    },
+    {
+      "call_id": "call_020",
+      "date": "2026-06-22",
+      "patient": { "id": "P-1006", "name": "Harold Okafor", "age": 77 },
+      "duration_seconds": 268,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Harold! It's Amy. How are you today?" },
+        { "speaker": "participant", "text": "Top of the morning, Amy. Guess what my niece brought over on Sunday." },
+        { "speaker": "assistant", "text": "Could it be... a pillbox?" },
+        { "speaker": "participant", "text": "A big blue one, with the days of the week in white letters. We filled it up together for the whole week." },
+        { "speaker": "assistant", "text": "That's perfect, Harold. So this morning there was no mystery at the sink?" },
+        { "speaker": "participant", "text": "None at all. Monday's little door was open and empty, so I knew I'd taken them. No more guessing." },
+        { "speaker": "assistant", "text": "I love it. I'll let the nurse know it's working out." },
+        { "speaker": "participant", "text": "Tell her my niece beat her to it! Now, will the domino table be set up on Thursday?" },
+        { "speaker": "assistant", "text": "It'll be there. Save me a seat, Harold." },
+        { "speaker": "participant", "text": "Ha! Bye, Amy." }
+      ]
+    },
+    {
+      "call_id": "call_021",
+      "date": "2026-06-23",
+      "patient": { "id": "P-1008", "name": "Samuel Rivera", "age": 80 },
+      "duration_seconds": 331,
+      "turns": [
+        { "speaker": "assistant", "text": "Good morning, Samuel! It's Amy from Harborview. How are you doing today?" },
+        { "speaker": "participant", "text": "Doing fine myself, but poor Gus next door had a rough weekend. He tripped over his garden hose Saturday morning and sprained his wrist." },
+        { "speaker": "assistant", "text": "Oh no, poor Gus. Is someone looking after him?" },
+        { "speaker": "participant", "text": "His son drove him to urgent care. It's wrapped up, nothing broken. He'll mend." },
+        { "speaker": "assistant", "text": "That's a relief. And you, Samuel - steady on your own feet? No trips or stumbles for you?" },
+        { "speaker": "participant", "text": "Me? Solid as a rock, Amy. I watch where I put my feet." },
+        { "speaker": "assistant", "text": "Glad to hear it. Are the evening walks with Gus on hold while he mends?" },
+        { "speaker": "participant", "text": "We're back at it already - he just walks a little slower and I match him. Twenty minutes every evening, same as always." },
+        { "speaker": "assistant", "text": "Good for both of you. See you at the center tomorrow, Samuel." },
+        { "speaker": "participant", "text": "See you, Amy. Bye now." }
+      ]
+    }
+  ]
+}

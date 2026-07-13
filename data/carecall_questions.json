@@ -1,0 +1,49 @@
+{
+  "meta": {
+    "description": "Sample evaluation questions for the CareCall Insight exercise. expected_source_calls lists the call_ids a good system should ground its answer in. An EMPTY list means the corpus contains no answer - the system should say so instead of guessing.",
+    "usage": "Optional. Use these to spot-check your system by hand, or build a small automated eval (e.g., retrieval hit rate against expected_source_calls) as one of the optional extensions.",
+    "scoring_hint": "hit = every expected call_id appears among your cited sources; extra citations are acceptable."
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What new medication did Margaret Chen start, and when was it first mentioned?",
+      "expected_source_calls": ["call_003"]
+    },
+    {
+      "id": "q2",
+      "question": "Which participants have reported feeling dizzy in June?",
+      "expected_source_calls": ["call_009", "call_015"]
+    },
+    {
+      "id": "q3",
+      "question": "Who has been having trouble sleeping?",
+      "expected_source_calls": ["call_011", "call_016"]
+    },
+    {
+      "id": "q4",
+      "question": "Has any participant fallen recently?",
+      "expected_source_calls": []
+    },
+    {
+      "id": "q5",
+      "question": "What did Frank Delgado say about the van service?",
+      "expected_source_calls": ["call_004"]
+    },
+    {
+      "id": "q6",
+      "question": "When did Rosa Kim first mention knee pain?",
+      "expected_source_calls": ["call_001"]
+    },
+    {
+      "id": "q7",
+      "question": "Did anyone mention chest pain?",
+      "expected_source_calls": []
+    },
+    {
+      "id": "q8",
+      "question": "What happened with Dorothy's cough?",
+      "expected_source_calls": ["call_012", "call_018"]
+    }
+  ]
+}

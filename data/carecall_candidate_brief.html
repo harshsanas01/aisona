@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareCall Insight — Coding Exercise (Candidate Brief)</title>
+<style>
+  :root { --accent: #0f766e; --accent-bg: #f0fdfa; --border: #e2e8f0; --muted: #64748b; --warn-bg: #fffbeb; --warn-border: #f59e0b; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+         color: #1e293b; line-height: 1.6; max-width: 880px; margin: 0 auto; padding: 48px 28px 80px; }
+  h1 { font-size: 1.7rem; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .subtitle { color: var(--muted); margin: 0 0 6px; font-size: 1.02rem; }
+  .kit-meta { color: var(--muted); font-size: 0.85rem; margin-bottom: 28px; }
+  h2 { font-size: 1.18rem; margin: 2.4em 0 0.7em; padding-bottom: 6px; border-bottom: 2px solid var(--border); }
+  h3 { font-size: 1.0rem; margin: 1.6em 0 0.5em; }
+  p { margin: 0.6em 0; }
+  table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: 0.92rem; }
+  th { background: #f1f5f9; text-align: left; }
+  th, td { border: 1px solid var(--border); padding: 8px 12px; vertical-align: top; }
+  code { background: #f6f8fa; padding: 2px 5px; border-radius: 4px; font-size: 0.88em; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  pre { background: #f6f8fa; border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; overflow-x: auto; font-size: 0.84rem; line-height: 1.5; }
+  pre code { background: none; padding: 0; }
+  .callout { border-left: 4px solid var(--accent); background: var(--accent-bg); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 1.2em 0; }
+  .warn { border-left: 4px solid var(--warn-border); background: var(--warn-bg); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 1.2em 0; }
+  ul, ol { padding-left: 1.4em; margin: 0.6em 0; }
+  li { margin: 0.35em 0; }
+  .tag { display: inline-block; background: var(--accent-bg); color: var(--accent); border: 1px solid var(--accent);
+         border-radius: 999px; padding: 1px 10px; font-size: 0.78rem; font-weight: 600; margin-right: 6px; }
+  .muted { color: var(--muted); }
+  @media print { body { padding: 0; max-width: none; } .callout, .warn { break-inside: avoid; } }
+</style>
+</head>
+<body>
+
+<h1>CareCall Insight</h1>
+<p class="subtitle">Full-stack coding exercise — build a question-answering tool over care-call transcripts</p>
+<p class="kit-meta">Time limit: <strong>90 minutes</strong> · Any language, framework, or stack · AI coding assistants allowed · 30-minute debrief follows · Kit v1.2</p>
+
+<div class="callout">
+<strong>Read this first.</strong> This exercise is deliberately bigger than 90 minutes. You are <em>not</em> expected to finish everything — what you choose to build first, what you consciously cut, and how you explain those choices are evaluated as much as the code itself. Get the core loop working end-to-end, then improve whatever <em>you</em> think matters most.
+</div>
+
+<h2>0. Before the session — environment checklist</h2>
+<p>The 90 minutes start with the kit in your hands; environment setup is <strong>not</strong> part of the exercise. Verify the day before:</p>
+<ul>
+  <li>Your editor/IDE and the AI coding tools you plan to use are installed and logged in.</li>
+  <li>A language runtime you can start a web server with — confirm a hello-world page serves locally.</li>
+  <li><code>git</code> is configured (<code>git init &amp;&amp; git commit</code> works with your identity).</li>
+  <li>A handover path: a repo host you can push to, or the ability to zip the project folder.</li>
+  <li>If you want to use an LLM API: have your own key ready, or request the temporary key <em>before</em> the session starts.</li>
+</ul>
+<p class="muted">If your environment breaks mid-session, say so immediately instead of silently debugging it — the interviewer decides how to handle lost time.</p>
+
+<h2>1. Scenario</h2>
+<p><strong>Harborview Senior Day Center</strong> (fictional) runs an AI phone assistant named <strong>Amy</strong> that makes short daily check-in calls to older adults in its day program. The care staff can't listen to every call, but the calls are full of things they need to know — new medications, dizzy spells, missed meals, ride complaints.</p>
+<p>Your job: build a small internal web tool that lets a care coordinator ask questions across the transcripts in natural language — <em>"Who mentioned feeling dizzy this month?"</em> — and get trustworthy, <strong>source-linked</strong> answers.</p>
+
+<h2>2. What you're given</h2>
+<ul>
+  <li><code>carecall_transcripts.json</code> — 21 check-in calls (8–13 turns each) with patient name, date, and per-turn speaker labels.</li>
+  <li><code>carecall_questions.json</code> — 8 sample questions with the calls a good answer should be grounded in. Use them to test yourself. <strong>Some are intentionally unanswerable from the data.</strong></li>
+  <li><strong>LLM access</strong> — three equally acceptable options:
+    <ol>
+      <li>your own API key (any provider),</li>
+      <li>a temporary rate-limited key from us — just ask,</li>
+      <li><strong>mock mode</strong>: no LLM at all; return the retrieved passages as an extractive answer.</li>
+    </ol>
+    Mock mode is <em>not</em> penalized — we grade the pipeline and the grounding, not the prose. Whichever you choose, make the LLM component swappable.</li>
+</ul>
+
+<div class="warn">
+<strong>Scale note (this matters):</strong> the 20 calls are a small sample. The production corpus is ~50,000 calls, growing by ~2,000 per week. Your design should not assume the whole corpus fits into a single prompt. Shortcuts are fine — as long as you document them and know what you'd change.
+</div>
+
+<h3>Transcript schema</h3>
+<pre><code>{
+  "calls": [
+    {
+      "call_id": "call_001",
+      "date": "2026-05-26",
+      "patient": { "id": "P-1003", "name": "Rosa Kim", "age": 75 },
+      "duration_seconds": 412,
+      "turns": [
+        { "speaker": "assistant",   "text": "Good morning, Rosa! ..." },
+        { "speaker": "participant", "text": "Oh, good morning, Amy. ..." }
+      ]
+    }
+  ]
+}</code></pre>
+
+<h2>3. Core requirements — build these first</h2>
+<ol>
+  <li><span class="tag">C1</span> <strong>Backend service</strong> that loads and indexes the transcripts and exposes a question-answering endpoint. Every answer must <strong>cite its sources</strong> — the call ID(s) and the specific turns the answer is based on. If the data doesn't contain an answer, the system should say so — not guess.</li>
+  <li><span class="tag">C2</span> <strong>Web UI</strong>: type a question → see the answer with its cited sources; click a source → view that transcript.</li>
+  <li><span class="tag">C3</span> <strong>Retrieval that scales in principle</strong> — see the scale note above. Any retrieval method is fine (keyword, TF-IDF/BM25, embeddings, hybrid) if you can explain why you chose it.</li>
+</ol>
+
+<h2>4. Optional extensions — pick at most 1–2, only after the core works</h2>
+<ul>
+  <li>Filter questions by patient and/or date range</li>
+  <li>Automated eval script against <code>carecall_questions.json</code> (e.g., report retrieval hit rate)</li>
+  <li>Highlight safety-relevant utterances (dizziness, near-misses, missed medications…) in the transcript view</li>
+  <li>Streaming answers</li>
+  <li>Hybrid search (keyword + semantic)</li>
+  <li>One-command run (e.g., docker-compose)</li>
+  <li>Endpoint to ingest a newly completed call transcript</li>
+</ul>
+
+<h2>5. Explicit non-goals</h2>
+<p>Do <strong>not</strong> spend time on: authentication, deployment, mobile layouts, or pixel-perfect visual design. Time spent here is wasted.</p>
+
+<h2>6. Rules</h2>
+<ul>
+  <li>Any language, framework, database, or library. Vector DBs allowed if you can say why.</li>
+  <li><strong>AI coding assistants are allowed and encouraged.</strong> But you must understand every line you submit — the debrief includes a short hands-on check of your own code.</li>
+  <li>No secrets committed to the repo (use environment variables).</li>
+  <li><strong>Commit as you go.</strong> We read the commit history to see how you worked.</li>
+</ul>
+
+<h2>7. Deliverables</h2>
+<ul>
+  <li>A git repository (link or zip) with your real commit history.</li>
+  <li>A <code>README</code> containing:
+    <ul>
+      <li>how to run it (≤ 3 commands),</li>
+      <li>a short architecture overview (a small diagram or ~5 lines),</li>
+      <li>key decisions and trade-offs (what you cut and why),</li>
+      <li>what you would do next with one more day,</li>
+      <li>one sentence on where AI tools helped you most.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2>8. How we evaluate</h2>
+<p>Six dimensions — <strong>none of them requires completeness</strong>:</p>
+<table>
+  <tr><th>Dimension</th><th>What we look at</th></tr>
+  <tr><td>Scoping &amp; judgment</td><td>Did the core loop come first? Were cuts deliberate and explained?</td></tr>
+  <tr><td>Architecture</td><td>Separation of concerns; is the LLM/retrieval swappable; where would this design bend at scale?</td></tr>
+  <tr><td>Backend pipeline</td><td>Ingestion → indexing → query path; error handling; citations traced from actual retrieval.</td></tr>
+  <tr><td>Retrieval &amp; LLM literacy</td><td>Chunking choices for dialogue, retrieval method rationale, grounding, behavior on unanswerable questions.</td></tr>
+  <tr><td>Frontend</td><td>A usable ask→answer→source loop; loading/error/empty states; sources you can actually open.</td></tr>
+  <tr><td>Communication</td><td>README honesty and clarity; commit history; how you explain decisions in the debrief.</td></tr>
+</table>
+<p class="muted">A smaller thing that works, cleanly structured and honestly documented, beats a bigger thing that's broken.</p>
+
+<h2>9. Debrief (30 min, right after the build)</h2>
+<p>We'll spend the session on four things: a demo where you show us <strong>how a care coordinator would actually use your tool</strong>; your <strong>architecture choices</strong> and what you'd change at scale; your <strong>retrieval &amp; LLM decisions</strong> (chunking, ranking, grounding, evaluation); and the <strong>design and thoroughness of your pipeline</strong> (failure paths, citations, edge cases). We'll finish with a brief hands-on check of your own code — not a line-by-line recital, just enough to see that it's yours.</p>
+
+<h2>10. FAQ</h2>
+<ul>
+  <li><strong>Can I use embeddings / a vector DB?</strong> Yes — if you can say why. TF-IDF with a good justification scores as well as embeddings with none.</li>
+  <li><strong>Can the answer be extractive (no LLM)?</strong> Yes. Mock mode is a first-class option.</li>
+  <li><strong>What if I run out of time?</strong> Write what's missing and how you'd build it in the README. Unfinished-but-explained beats finished-but-unexplainable.</li>
+  <li><strong>Can I look things up online?</strong> Yes — docs, Stack Overflow, AI chat, anything. Same rule applies: you own every line.</li>
+</ul>
+
+<p class="kit-meta" style="margin-top:40px">All people and events in the dataset are fictional. · CareCall Insight kit v1.2</p>
+
+</body>
+</html>
