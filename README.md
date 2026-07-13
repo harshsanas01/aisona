@@ -19,7 +19,7 @@ make backend
 In a second terminal:
 
 ```bash
-make frontend
+make web
 ```
 
 Add your OpenAI key to .env if you want OpenAI-backed answer generation. Without it, the app runs in mock mode and still provides grounded extractive answers.
