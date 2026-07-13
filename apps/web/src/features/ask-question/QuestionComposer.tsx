@@ -9,11 +9,20 @@ const sampleQuestions = [
 interface QuestionComposerProps {
   question: string;
   loading: boolean;
+  streaming: boolean;
   onQuestionChange: (value: string) => void;
   onAsk: (value?: string) => void;
+  onAskStream: (value?: string) => void;
 }
 
-export function QuestionComposer({ question, loading, onQuestionChange, onAsk }: QuestionComposerProps) {
+export function QuestionComposer({
+  question,
+  loading,
+  streaming,
+  onQuestionChange,
+  onAsk,
+  onAskStream,
+}: QuestionComposerProps) {
   return (
     <>
       <label className="field-label" htmlFor="question">Question</label>
@@ -31,9 +40,14 @@ export function QuestionComposer({ question, loading, onQuestionChange, onAsk }:
           </button>
         ))}
       </div>
-      <button className="primary" onClick={() => onAsk()} disabled={loading}>
-        {loading ? 'Asking…' : 'Ask'}
-      </button>
+      <div className="ask-buttons">
+        <button className="primary" onClick={() => onAsk()} disabled={loading}>
+          {loading ? 'Asking…' : 'Ask'}
+        </button>
+        <button className="secondary" onClick={() => onAskStream()} disabled={streaming}>
+          {streaming ? 'Streaming…' : 'Ask (stream)'}
+        </button>
+      </div>
     </>
   );
 }
