@@ -35,7 +35,7 @@ def test_ask_response_shape_for_supported_question():
     assert response.status_code == 200
     body = response.json()
     assert set(body.keys()) == {
-        'question', 'answer', 'answerable', 'confidence', 'citations', 'retrieval_debug',
+        'question', 'answer', 'answerable', 'confidence', 'citations', 'retrieval_debug', 'filters',
     }
     assert body['answerable'] is True
     assert body['citations']

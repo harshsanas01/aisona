@@ -34,4 +34,5 @@ def ask(payload: AskRequest, request: Request) -> AskResponse:
         confidence=result.confidence,
         citations=[CitationOut(**asdict(citation)) for citation in result.citations],
         retrieval_debug=result.retrieval_debug,
+        filters=result.filters,
     )

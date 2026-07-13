@@ -49,6 +49,7 @@ class AskQuestionUseCase:
         end_date: Optional[str] = None,
     ) -> AskQuestionResult:
         date_range = DateRange(start=start_date, end=end_date)
+        filters = {"patient_id": patient_id, "start_date": start_date, "end_date": end_date}
 
         chunks = self.retrieval_service.retrieve(
             question,
@@ -58,16 +59,12 @@ class AskQuestionUseCase:
         )
 
         if not chunks or self.answerability_gate.is_unanswerable(question, chunks):
-            return self._unanswerable(question, len(chunks))
+            return self._unanswerable(question, len(chunks), filters)
 
-        grounded = self.answer_generator.generate(
-            question,
-            chunks,
-            filters={"patient_id": patient_id, "start_date": start_date, "end_date": end_date},
-        )
+        grounded = self.answer_generator.generate(question, chunks, filters=filters)
 
         if not grounded.answerable:
-            return self._unanswerable(question, len(chunks))
+            return self._unanswerable(question, len(chunks), filters)
 
         chunk_lookup = {chunk.chunk_id: chunk for chunk in chunks}
         valid_ids = [eid for eid in grounded.used_evidence_ids if eid in chunk_lookup]
@@ -86,6 +83,7 @@ class AskQuestionUseCase:
             confidence=grounded.confidence,
             citations=citations,
             retrieval_debug={"mode": "hybrid", "candidate_count": len(chunks)},
+            filters=filters,
         )
 
     @staticmethod
@@ -93,7 +91,7 @@ class AskQuestionUseCase:
         turns_text = [f"{turn.speaker}: {turn.text}" for turn in chunk.turns]
         return " | ".join(turns_text)[:220]
 
-    def _unanswerable(self, question: str, candidate_count: int) -> AskQuestionResult:
+    def _unanswerable(self, question: str, candidate_count: int, filters: dict) -> AskQuestionResult:
         return AskQuestionResult(
             question=question,
             answer=UNANSWERABLE_MESSAGE,
@@ -101,4 +99,5 @@ class AskQuestionUseCase:
             confidence="low",
             citations=[],
             retrieval_debug={"mode": "hybrid", "candidate_count": candidate_count},
+            filters=filters,
         )

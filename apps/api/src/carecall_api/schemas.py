@@ -27,3 +27,4 @@ class AskResponse(BaseModel):
     confidence: str
     citations: List[CitationOut]
     retrieval_debug: dict
+    filters: dict

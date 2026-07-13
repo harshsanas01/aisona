@@ -10,7 +10,10 @@ from carecall_application.use_cases import (
     GetCallUseCase,
     IngestCallUseCase,
     ListCallsUseCase,
+    ListPatientsUseCase,
+    ListSafetyEventsUseCase,
 )
+from carecall_domain import DeterministicSafetyClassifier
 from carecall_llm.grounding import HeuristicAnswerabilityGate
 from carecall_llm.providers import MockAnswerGenerator, OpenAIAnswerGenerator
 from carecall_persistence.in_memory import (
@@ -33,6 +36,8 @@ class Container:
     list_calls: ListCallsUseCase
     get_call: GetCallUseCase
     ingest_call: IngestCallUseCase
+    list_patients: ListPatientsUseCase
+    list_safety_events: ListSafetyEventsUseCase
 
 
 def build_container() -> Container:
@@ -79,13 +84,15 @@ def build_container() -> Container:
         list_calls=ListCallsUseCase(call_repository),
         get_call=GetCallUseCase(call_repository),
         ingest_call=ingest_call,
+        list_patients=ListPatientsUseCase(patient_repository),
+        list_safety_events=ListSafetyEventsUseCase(call_repository, DeterministicSafetyClassifier()),
     )
 
 
 def _build_memory_repositories():
     calls = load_calls_from_json(config.TRANSCRIPTS_PATH)
     call_repository = InMemoryCallRepository(calls)
-    patient_repository = InMemoryPatientRepository(calls)
+    patient_repository = InMemoryPatientRepository(call_repository)
     chunks = [chunk for call in calls for chunk in build_chunks(call)]
     chunk_repository = InMemoryChunkRepository(chunks)
     return call_repository, patient_repository, chunk_repository

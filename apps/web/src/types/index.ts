@@ -8,6 +8,12 @@ export interface Citation {
   quote: string;
 }
 
+export interface AskFilters {
+  patient_id: string | null;
+  start_date: string | null;
+  end_date: string | null;
+}
+
 export interface AskResponse {
   question: string;
   answer: string;
@@ -18,6 +24,7 @@ export interface AskResponse {
     mode: string;
     candidate_count: number;
   };
+  filters: AskFilters;
 }
 
 export interface TranscriptTurn {
@@ -36,4 +43,20 @@ export interface TranscriptCall {
   };
   duration_seconds: number;
   turns: TranscriptTurn[];
+}
+
+export interface Patient {
+  id: string;
+  name: string;
+  age: number;
+}
+
+export interface SafetyEvent {
+  category: string;
+  severity: string;
+  call_id: string;
+  turn_number: number;
+  matched_text: string;
+  explanation: string;
+  classifier_type: string;
 }

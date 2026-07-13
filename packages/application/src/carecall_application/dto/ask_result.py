@@ -12,3 +12,4 @@ class AskQuestionResult:
     confidence: str
     citations: List[Citation] = field(default_factory=list)
     retrieval_debug: dict = field(default_factory=dict)
+    filters: dict = field(default_factory=dict)

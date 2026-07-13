@@ -29,22 +29,25 @@ class InMemoryCallRepository(CallRepository):
 
 class InMemoryPatientRepository(PatientRepository):
     """Patients only exist attached to calls in demo mode - there is no
-    standalone patient fixture, so the repository derives its patient list
-    from whatever calls have been loaded or ingested so far."""
+    standalone patient fixture. Reads live from the CallRepository (rather
+    than keeping its own snapshot) so a patient introduced by a newly
+    ingested call shows up immediately, matching PostgresPatientRepository's
+    behavior of always querying current state."""
 
-    def __init__(self, calls: Optional[List[Call]] = None):
-        self._patients: Dict[str, Patient] = {}
-        for call in calls or []:
-            self.register_from_call(call)
-
-    def register_from_call(self, call: Call) -> None:
-        self._patients[call.patient.id] = call.patient
+    def __init__(self, call_repository: CallRepository):
+        self._call_repository = call_repository
 
     def list_patients(self) -> List[Patient]:
-        return list(self._patients.values())
+        seen: Dict[str, Patient] = {}
+        for call in self._call_repository.list_calls():
+            seen.setdefault(call.patient.id, call.patient)
+        return list(seen.values())
 
     def get_patient(self, patient_id: str) -> Optional[Patient]:
-        return self._patients.get(patient_id)
+        for call in self._call_repository.list_calls():
+            if call.patient.id == patient_id:
+                return call.patient
+        return None
 
 
 class InMemoryChunkRepository(ChunkRepository):
