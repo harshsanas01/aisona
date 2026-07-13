@@ -3,24 +3,18 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "carecall-api"
+name = "carecall-persistence"
 version = "0.1.0"
-description = "CareCall Insight FastAPI delivery layer"
+description = "CareCall Insight repository implementations (in-memory demo mode, PostgreSQL production-like mode)"
 requires-python = ">=3.11"
 dependencies = [
-  "fastapi>=0.110.0",
-  "uvicorn>=0.30.0",
-  "pydantic>=2.7.0",
-  "python-dotenv>=1.0.0",
   "carecall-domain",
   "carecall-application",
-  "carecall-retrieval",
-  "carecall-llm",
-  "carecall-persistence",
+  "pydantic>=2.7.0",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0.0", "httpx>=0.27.0"]
+postgres = ["sqlalchemy>=2.0.0", "alembic>=1.13.0", "psycopg[binary]>=3.1.0", "pgvector>=0.2.5"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

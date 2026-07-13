@@ -3,7 +3,13 @@
 setup:
 	python3 -m venv .venv
 	. .venv/bin/activate && pip install --upgrade pip
-	. .venv/bin/activate && pip install -e "apps/api[dev]"
+	. .venv/bin/activate && pip install \
+		-e packages/domain \
+		-e packages/application \
+		-e packages/retrieval \
+		-e packages/llm \
+		-e packages/persistence \
+		-e "apps/api[dev]"
 	npm install --prefix frontend
 
 backend:

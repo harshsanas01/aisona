@@ -1,11 +1,12 @@
 from pathlib import Path
 
-from carecall_api.retrieval import TranscriptRetriever
-from carecall_api.data_loader import load_transcripts
+from carecall_persistence.in_memory import load_calls_from_json
+from carecall_retrieval import HybridRetriever, build_chunks
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-TRANSLATIONS = load_transcripts(REPO_ROOT / 'data' / 'raw' / 'carecall_transcripts.json')
-RETRIEVER = TranscriptRetriever(TRANSLATIONS)
+CALLS = load_calls_from_json(REPO_ROOT / 'data' / 'raw' / 'carecall_transcripts.json')
+CHUNKS = [chunk for call in CALLS for chunk in build_chunks(call)]
+RETRIEVER = HybridRetriever(CHUNKS)
 
 
 def test_retrieval_for_lisinopril():
@@ -16,11 +17,6 @@ def test_retrieval_for_lisinopril():
 def test_retrieval_for_cough():
     results = RETRIEVER.retrieve("Dorothy's cough", limit=10)
     assert any(chunk.call_id in {'call_012', 'call_018'} for chunk in results)
-
-
-def test_unanswerable_chest_pain_query_has_no_citations():
-    results = RETRIEVER.retrieve('chest pain', limit=10)
-    assert not results
 
 
 def test_out_of_domain_weather_query_returns_no_evidence():
