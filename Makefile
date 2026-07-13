@@ -29,6 +29,8 @@ test-contract:
 
 eval:
 	. .venv/bin/activate && python scripts/evaluate.py
+	. .venv/bin/activate && python scripts/evaluate_retrieval.py
+	. .venv/bin/activate && python scripts/evaluate_grounding.py
 
 migrate:
 	. .venv/bin/activate && cd packages/persistence && alembic upgrade head

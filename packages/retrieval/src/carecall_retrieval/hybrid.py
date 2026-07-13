@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from typing import List, Optional, Tuple
 
 from carecall_application.ports.retrieval_service import RetrievalService
@@ -20,6 +21,32 @@ DEFAULT_SEMANTIC_WEIGHT = 0.55
 DEFAULT_TOP_K = 8
 
 ScoredChunk = Tuple[float, Chunk]
+
+# Capitalized words in a query are usually names - including third parties
+# (e.g. "Gus", mentioned only inside another patient's call, never as a
+# chunk's own patient_name). Matching them verbatim against chunk text lets
+# retrieval surface a third-party mention that the patient-name boost alone
+# would miss. len>=3 and not fully uppercase filters out "I"/acronyms.
+_PROPER_NOUN_PATTERN = re.compile(r"\b[A-Z][a-zA-Z]{2,}\b")
+
+# Excluded from the proper-noun boost above: these are only capitalized
+# because they start the sentence, not because they're names, and several
+# ("Did", "Was") appear constantly in assistant dialogue ("Did you...") -
+# without this exclusion they'd add a spurious boost to nearly every chunk.
+_QUESTION_STARTER_WORDS = frozenset({
+    "Did", "Has", "Have", "Had", "Was", "Were", "Is", "Are", "Should",
+    "Would", "Could", "What", "Who", "When", "Where", "Why", "How",
+    "Which", "Does", "Do", "Tell", "Can", "Will", "The", "Any",
+    # Calendar words are capitalized but are not names - without this a
+    # question like "reported feeling dizzy in June?" would treat "June"
+    # as a person to match against chunk text, ignoring genuinely dizzy
+    # evidence in favor of any unrelated chunk that happens to also
+    # mention the word "June".
+    "January", "February", "March", "April", "May", "June", "July",
+    "August", "September", "October", "November", "December",
+    "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday",
+    "Today", "Tomorrow", "Yesterday",
+})
 
 
 class HybridRetriever(RetrievalService):
@@ -80,7 +107,7 @@ class HybridRetriever(RetrievalService):
         if "cough" in lowered_query:
             boost_keywords.append("cough")
         if "fall" in lowered_query or "fell" in lowered_query:
-            boost_keywords.append("fall")
+            boost_keywords.extend(["fall", "fell", "tripped", "sprained", "went down"])
         if "medication" in lowered_query or "pill" in lowered_query or "lisinopril" in lowered_query:
             boost_keywords.extend(["medication", "pill", "lisinopril", "started"])
         return boost_keywords
@@ -96,6 +123,11 @@ class HybridRetriever(RetrievalService):
         boost = 0.0
         if chunk.patient_name.lower() in lowered_query:
             boost += 0.2
+        for name in _PROPER_NOUN_PATTERN.findall(query):
+            if name in _QUESTION_STARTER_WORDS:
+                continue
+            if name != name.upper() and name in chunk.text:
+                boost += 0.15
         if any(token in lowered_query for token in ["lisinopril", "medication", "pill", "started"]):
             if any(token in chunk.text.lower() for token in ["lisinopril", "medication", "pill", "started"]):
                 boost += 0.25

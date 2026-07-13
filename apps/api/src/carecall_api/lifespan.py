@@ -14,7 +14,11 @@ from carecall_application.use_cases import (
     ListSafetyEventsUseCase,
 )
 from carecall_domain import DeterministicSafetyClassifier
-from carecall_llm.grounding import HeuristicAnswerabilityGate
+from carecall_llm.grounding import (
+    DeterministicSupportValidator,
+    HeuristicAnswerabilityGate,
+    StructuralCitationValidator,
+)
 from carecall_llm.providers import MockAnswerGenerator, OpenAIAnswerGenerator
 from carecall_persistence.in_memory import (
     InMemoryCallRepository,
@@ -64,9 +68,16 @@ def build_container() -> Container:
         answer_generator = MockAnswerGenerator()
 
     answerability_gate = HeuristicAnswerabilityGate()
+    support_validator = DeterministicSupportValidator()
+    citation_validator = StructuralCitationValidator()
 
     ask_question = AskQuestionUseCase(
-        retrieval_service, answer_generator, answerability_gate, default_limit=config.TOP_K,
+        retrieval_service,
+        answer_generator,
+        answerability_gate,
+        support_validator,
+        citation_validator,
+        default_limit=config.TOP_K,
     )
 
     def _refresh_retrieval_index() -> None:
