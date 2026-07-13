@@ -24,3 +24,18 @@ def test_retrieval_for_cough():
 def test_unanswerable_chest_pain_query_has_no_citations():
     results = RETRIEVER.retrieve('chest pain', limit=10)
     assert not results
+
+
+def test_out_of_domain_weather_query_returns_no_evidence():
+    results = RETRIEVER.retrieve("What is today's weather in LA?", limit=10)
+    assert not results
+
+
+def test_out_of_domain_super_bowl_query_returns_no_evidence():
+    results = RETRIEVER.retrieve('Who won the Super Bowl?', limit=10)
+    assert not results
+
+
+def test_out_of_domain_bitcoin_query_returns_no_evidence():
+    results = RETRIEVER.retrieve('What is the price of Bitcoin?', limit=10)
+    assert not results

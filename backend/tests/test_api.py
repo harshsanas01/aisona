@@ -3,6 +3,8 @@ import os
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.main import app
@@ -43,3 +45,18 @@ def test_mock_mode_works_without_openai_key(monkeypatch):
     body = response.json()
     assert body['answerable'] is True
     assert body['citations'][0]['call_id'] == 'call_003'
+
+
+@pytest.mark.parametrize('question', [
+    "What is today's weather in LA?",
+    'Who won the Super Bowl?',
+    'What is the price of Bitcoin?',
+])
+def test_out_of_domain_questions_are_rejected(monkeypatch, question):
+    monkeypatch.delenv('OPENAI_API_KEY', raising=False)
+    response = client.post('/api/ask', json={'question': question})
+    assert response.status_code == 200
+    body = response.json()
+    assert body['answerable'] is False
+    assert body['confidence'] == 'low'
+    assert body['citations'] == []

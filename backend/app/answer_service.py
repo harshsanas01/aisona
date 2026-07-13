@@ -8,7 +8,7 @@ from openai import OpenAI
 from .config import ANSWER_MODE, OPENAI_API_KEY, OPENAI_CHAT_MODEL
 from .data_loader import TranscriptCorpus
 from .models import AskResponse
-from .retrieval import Chunk, TranscriptRetriever
+from .retrieval import MIN_RELEVANCE_SCORE, Chunk, TranscriptRetriever
 
 
 class AnswerService:
@@ -23,6 +23,12 @@ class AnswerService:
             return self._unanswerable(question, 0)
 
         if self._is_unanswerable_question(question, chunks):
+            return self._unanswerable(question, len(chunks))
+
+        # Defense in depth: retrieval already filters by MIN_RELEVANCE_SCORE,
+        # but never trust a non-empty chunk list alone as proof of relevance -
+        # re-verify the top chunk here too before treating it as answerable.
+        if self.answer_mode == 'mock' and self.retriever.relevance_score(question, chunks[0], start_date, end_date) < MIN_RELEVANCE_SCORE:
             return self._unanswerable(question, len(chunks))
 
         answer_text = self._generate_answer(question, chunks)
