@@ -16,3 +16,4 @@ class GroundedAnswer:
     model_name: Optional[str] = None
     prompt_version: str = "v1"
     usage: Optional[dict] = None
+    used_fallback: bool = False

@@ -1,8 +1,10 @@
 from typing import List
 
 from carecall_domain import Call, DuplicateCallError, Patient, Turn
-from fastapi import APIRouter, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from pydantic import BaseModel, Field
+
+from ..access_control import require_permission
 
 router = APIRouter()
 
@@ -49,7 +51,10 @@ def _to_domain_call(payload: CallIn) -> Call:
     )
 
 
-@router.post("/api/calls", status_code=status.HTTP_201_CREATED, response_model=IngestResultOut)
+@router.post(
+    "/api/calls", status_code=status.HTTP_201_CREATED, response_model=IngestResultOut,
+    dependencies=[Depends(require_permission("manage_tasks"))],
+)
 def ingest_call(payload: CallIn, request: Request) -> IngestResultOut:
     container = request.app.state.container
     if container is None:
@@ -64,7 +69,10 @@ def ingest_call(payload: CallIn, request: Request) -> IngestResultOut:
     return IngestResultOut(call_id=result.call_id, status=result.status, chunk_count=result.chunk_count)
 
 
-@router.post("/api/calls/batch", response_model=List[IngestResultOut])
+@router.post(
+    "/api/calls/batch", response_model=List[IngestResultOut],
+    dependencies=[Depends(require_permission("manage_tasks"))],
+)
 def ingest_calls_batch(payload: BatchIngestRequest, request: Request) -> List[IngestResultOut]:
     container = request.app.state.container
     if container is None:

@@ -1,0 +1,13 @@
+.retrieval-lab-page { display: flex; flex-direction: column; gap: var(--space-4); }
+.retrieval-lab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-4); }
+.retrieval-lab-mode-card { display: flex; flex-direction: column; gap: var(--space-3); }
+.retrieval-lab-mode-header { display: flex; flex-direction: column; gap: var(--space-2); }
+.retrieval-lab-mode-header h3 { margin: 0; font-size: var(--text-base); color: var(--color-text-primary); }
+.retrieval-lab-mode-badges { display: flex; gap: var(--space-1); flex-wrap: wrap; }
+.retrieval-lab-candidate-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+.retrieval-lab-candidate { border-top: 1px solid var(--color-border); padding-top: var(--space-2); }
+.retrieval-lab-candidate:first-child { border-top: none; padding-top: 0; }
+.retrieval-lab-candidate-top { display: flex; align-items: center; gap: var(--space-2); margin-bottom: 4px; }
+.retrieval-lab-rank { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); }
+.retrieval-lab-patient { font-weight: var(--weight-medium); font-size: var(--text-sm); flex: 1; }
+.retrieval-lab-quote { font-size: var(--text-sm); color: var(--color-text-secondary); margin: 0 0 4px; }

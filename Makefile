@@ -1,4 +1,4 @@
-.PHONY: help setup dev backend web test test-unit test-integration test-e2e eval lint format typecheck migrate seed smoke test-contract clean
+.PHONY: help setup dev backend web test test-unit test-integration test-e2e eval prompt-eval lint format typecheck migrate seed smoke test-contract clean
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2}'
@@ -49,6 +49,9 @@ eval: ## Run all three evaluation layers (hit-rate, retrieval metrics, grounded-
 	. .venv/bin/activate && python scripts/evaluate.py
 	. .venv/bin/activate && python scripts/evaluate_retrieval.py
 	. .venv/bin/activate && python scripts/evaluate_grounding.py
+
+prompt-eval: ## Prompt/model/retrieval-config regression gate against data/evaluation/prompt_eval_baseline.json
+	. .venv/bin/activate && python scripts/prompt_eval.py
 
 lint: ## Ruff lint check across all Python packages
 	. .venv/bin/activate && ruff check packages apps/api/src apps/worker/src scripts

@@ -28,3 +28,7 @@ class AskResponse(BaseModel):
     citations: List[CitationOut]
     retrieval_debug: dict
     filters: dict
+    # Correlates this answer with its audit-trail record (see
+    # GET /api/v1/audit/questions/{request_id} and the "Why this answer?"
+    # developer drawer) - never used to look up the raw question text.
+    request_id: Optional[str] = None

@@ -23,6 +23,7 @@ def _env(new_name: str, legacy_name: str, default: str) -> str:
 STORAGE_MODE = os.getenv('CARECALL_STORAGE_MODE', 'memory').lower()
 RETRIEVAL_MODE = os.getenv('CARECALL_RETRIEVAL_MODE', 'hybrid').lower()
 ANSWER_MODE = _env('CARECALL_ANSWER_MODE', 'ANSWER_MODE', 'mock').lower()
+EXTRACTION_MODE = os.getenv('CARECALL_EXTRACTION_MODE', 'deterministic').lower()
 
 # OpenAI
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '')
@@ -42,3 +43,12 @@ BACKEND_PORT = int(os.getenv('BACKEND_PORT', '8000'))
 
 # Observability
 LOG_LEVEL = os.getenv('CARECALL_LOG_LEVEL', 'INFO').upper()
+
+# Audit trail privacy: question text is hashed by default; a short,
+# truncated preview is only ever persisted if this is explicitly enabled.
+# See docs/security/roles-and-privacy.md.
+AUDIT_RETAIN_QUESTION_PREVIEW = os.getenv('CARECALL_AUDIT_RETAIN_QUESTION_PREVIEW', 'false').lower() == 'true'
+
+# Developer/admin-only surfaces (Why-this-answer audit drawer, Retrieval
+# Lab) are hidden by default in production.
+DEVELOPER_MODE = os.getenv('CARECALL_DEVELOPER_MODE', 'false').lower() == 'true'

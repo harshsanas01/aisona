@@ -67,29 +67,49 @@ class AskQuestionUseCase:
         filters = {"patient_id": patient_id, "start_date": start_date, "end_date": end_date}
 
         if self.answerability_gate.is_query_out_of_scope(question):
-            return self._unanswerable(question, 0, filters)
+            return self._unanswerable(
+                question, 0, filters, grounding_checks={"out_of_scope": True},
+            )
 
         chunks = self.retrieval_service.retrieve(
             question, limit=self.default_limit, patient_id=patient_id, date_range=date_range,
         )
+        candidate_chunk_ids = [c.chunk_id for c in chunks]
 
         if not chunks or self.answerability_gate.is_unanswerable(question, chunks):
-            return self._unanswerable(question, len(chunks), filters)
+            return self._unanswerable(
+                question, len(chunks), filters, candidate_chunk_ids=candidate_chunk_ids,
+                grounding_checks={"answerability_gate": False},
+            )
 
         grounded = self.answer_generator.generate(question, chunks, filters=filters)
         if not grounded.answerable:
-            return self._unanswerable(question, len(chunks), filters)
+            return self._unanswerable(
+                question, len(chunks), filters, candidate_chunk_ids=candidate_chunk_ids,
+                model_name=grounded.model_name, prompt_version=grounded.prompt_version, usage=grounded.usage,
+                fallback_used=grounded.used_fallback, grounding_checks={"generator_answerable": False},
+            )
 
         selected_chunks = self._select_evidence(chunks, grounded.used_evidence_ids)
 
         if not self.support_validator.is_supported(question, selected_chunks):
-            return self._unanswerable(question, len(chunks), filters)
+            return self._unanswerable(
+                question, len(chunks), filters, candidate_chunk_ids=candidate_chunk_ids,
+                selected_evidence_ids=[c.chunk_id for c in selected_chunks],
+                model_name=grounded.model_name, prompt_version=grounded.prompt_version, usage=grounded.usage,
+                fallback_used=grounded.used_fallback, grounding_checks={"support_validation": False},
+            )
 
         citations = self.citation_validator.validate([
             chunk.to_citation(quote=self._quote_from_chunk(chunk)) for chunk in selected_chunks
         ])
         if not citations:
-            return self._unanswerable(question, len(chunks), filters)
+            return self._unanswerable(
+                question, len(chunks), filters, candidate_chunk_ids=candidate_chunk_ids,
+                selected_evidence_ids=[c.chunk_id for c in selected_chunks],
+                model_name=grounded.model_name, prompt_version=grounded.prompt_version, usage=grounded.usage,
+                fallback_used=grounded.used_fallback, grounding_checks={"citation_validation": False},
+            )
 
         return AskQuestionResult(
             question=question,
@@ -99,6 +119,16 @@ class AskQuestionUseCase:
             citations=citations,
             retrieval_debug={"mode": "hybrid", "candidate_count": len(chunks)},
             filters=filters,
+            candidate_chunk_ids=candidate_chunk_ids,
+            selected_evidence_ids=[c.chunk_id for c in selected_chunks],
+            model_name=grounded.model_name,
+            prompt_version=grounded.prompt_version,
+            usage=grounded.usage,
+            fallback_used=grounded.used_fallback,
+            grounding_checks={
+                "answerability_gate": True, "generator_answerable": True,
+                "support_validation": True, "citation_validation": True,
+            },
         )
 
     def stream(
@@ -183,7 +213,20 @@ class AskQuestionUseCase:
         turns_text = [f"{turn.speaker}: {turn.text}" for turn in chunk.turns]
         return " | ".join(turns_text)[:220]
 
-    def _unanswerable(self, question: str, candidate_count: int, filters: dict) -> AskQuestionResult:
+    def _unanswerable(
+        self,
+        question: str,
+        candidate_count: int,
+        filters: dict,
+        *,
+        candidate_chunk_ids: Optional[List[str]] = None,
+        selected_evidence_ids: Optional[List[str]] = None,
+        model_name: Optional[str] = None,
+        prompt_version: str = "v1",
+        usage: Optional[dict] = None,
+        fallback_used: bool = False,
+        grounding_checks: Optional[dict] = None,
+    ) -> AskQuestionResult:
         return AskQuestionResult(
             question=question,
             answer=UNANSWERABLE_MESSAGE,
@@ -192,4 +235,11 @@ class AskQuestionUseCase:
             citations=[],
             retrieval_debug={"mode": "hybrid", "candidate_count": candidate_count},
             filters=filters,
+            candidate_chunk_ids=candidate_chunk_ids or [],
+            selected_evidence_ids=selected_evidence_ids or [],
+            model_name=model_name,
+            prompt_version=prompt_version,
+            usage=usage,
+            fallback_used=fallback_used,
+            grounding_checks=grounding_checks or {},
         )

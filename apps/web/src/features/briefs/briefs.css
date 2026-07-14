@@ -1,0 +1,39 @@
+.briefs-generate-card { margin-bottom: var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); }
+.briefs-generate-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-3); }
+.briefs-include-resolved { display: flex; align-items: center; gap: 6px; font-size: var(--text-sm); color: var(--color-text-secondary); }
+
+.brief-view { display: flex; flex-direction: column; gap: var(--space-4); margin-bottom: var(--space-5); }
+.brief-header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
+.brief-header-top h2 { margin: 0; font-size: var(--text-lg); }
+.brief-header-meta { font-size: var(--text-sm); color: var(--color-text-muted); font-family: var(--font-mono); }
+.brief-header-actions { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.brief-header-generated { font-size: var(--text-xs); color: var(--color-text-muted); margin: var(--space-2) 0 0; }
+
+.brief-section { margin-bottom: var(--space-4); }
+.brief-section h3 { font-size: var(--text-base); margin: 0 0 var(--space-2); color: var(--color-text-primary); }
+.brief-bullet-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+.brief-bullet {
+  font-size: var(--text-sm); color: var(--color-text-secondary); border-left: 2px solid var(--color-brand-500);
+  padding-left: var(--space-3); padding-bottom: var(--space-1);
+}
+.brief-bullet strong { color: var(--color-text-primary); }
+.brief-bullet-evidence { display: flex; gap: var(--space-2); flex-wrap: wrap; margin-top: 4px; }
+.brief-bullet-badge { margin-left: var(--space-2); }
+
+.briefs-history { margin-top: var(--space-5); }
+.briefs-history h3 { margin: 0 0 var(--space-3); font-size: var(--text-base); }
+.briefs-history-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+.briefs-history-item {
+  width: 100%; text-align: left; border: none; background: transparent; padding: var(--space-2);
+  border-radius: var(--radius-md); font-size: var(--text-sm); color: var(--color-text-secondary); cursor: pointer;
+}
+.briefs-history-item:hover { background: var(--color-surface-hover, var(--color-slate-100)); }
+
+.print-only { display: none; }
+
+@media print {
+  .no-print { display: none !important; }
+  .print-only { display: block; }
+  .brief-bullet-evidence { display: none; }
+  body { background: #fff; }
+}

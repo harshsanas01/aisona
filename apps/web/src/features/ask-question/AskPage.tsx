@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Card } from '../../components/ui/Card';
 import { useAskQuestion, type Filters } from '../../hooks/useAskQuestion';
+import { useHealth } from '../../hooks/useHealth';
 import { useTranscriptDrawer } from '../transcript-viewer/TranscriptDrawerContext';
 import { PatientFilterPanel } from '../patient-filters/PatientFilterPanel';
 import { QuestionComposer } from './QuestionComposer';
@@ -8,6 +9,7 @@ import { AnswerCard } from './AnswerCard';
 import { SourceList } from './SourceList';
 import { StreamingAnswerCard } from './StreamingAnswerCard';
 import { useStreamingAnswer } from './useStreamingAnswer';
+import { WhyThisAnswerDrawer } from './WhyThisAnswerDrawer';
 import type { Citation } from '../../types';
 import './ask-page.css';
 
@@ -18,8 +20,10 @@ export function AskPage() {
     'Which participants reported feeling dizzy in June?',
   );
   const streaming = useStreamingAnswer();
+  const { health } = useHealth();
   const [answerMode, setAnswerMode] = useState<AnswerMode>('none');
   const [filters, setFilters] = useState<Filters>({ patientId: null, startDate: null, endDate: null });
+  const [whyRequestId, setWhyRequestId] = useState<string | null>(null);
   const { open: openTranscript } = useTranscriptDrawer();
 
   const handleAsk = async (value?: string) => {
@@ -60,7 +64,12 @@ export function AskPage() {
 
         {answerMode === 'sync' && answer ? (
           <>
-            <AnswerCard answer={answer} />
+            <AnswerCard
+              answer={answer}
+              onOpenWhyThisAnswer={
+                health?.developer_mode && answer.request_id ? () => setWhyRequestId(answer.request_id!) : undefined
+              }
+            />
             <SourceList citations={answer.citations} onOpenCitation={openCitation} />
           </>
         ) : null}
@@ -78,6 +87,7 @@ export function AskPage() {
           />
         ) : null}
       </Card>
+      <WhyThisAnswerDrawer requestId={whyRequestId} onClose={() => setWhyRequestId(null)} />
     </div>
   );
 }

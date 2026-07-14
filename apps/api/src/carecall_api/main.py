@@ -7,7 +7,23 @@ from fastapi.responses import JSONResponse
 from . import config
 from .lifespan import build_container, lifespan
 from .middleware import RequestContextMiddleware
-from .routes import calls, health, ingestion, metrics, patients, questions, safety
+from .routes import (
+    audit,
+    briefs,
+    calls,
+    feedback,
+    health,
+    ingestion,
+    metrics,
+    patient_patterns,
+    patient_timeline,
+    patients,
+    person_mentions,
+    questions,
+    retrieval_lab,
+    safety,
+    tasks,
+)
 
 configure_logging(config.LOG_LEVEL)
 
@@ -34,6 +50,14 @@ app.include_router(calls.router)
 app.include_router(questions.router)
 app.include_router(ingestion.router)
 app.include_router(patients.router)
+app.include_router(patient_timeline.router)
+app.include_router(patient_patterns.router)
+app.include_router(person_mentions.router)
+app.include_router(tasks.router)
+app.include_router(briefs.router)
+app.include_router(audit.router)
+app.include_router(feedback.router)
+app.include_router(retrieval_lab.router)
 app.include_router(safety.router)
 app.include_router(metrics.router)
 

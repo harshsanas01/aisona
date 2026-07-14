@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import logging
 import time
+from dataclasses import replace
 from typing import List, Optional
 
 import openai
@@ -52,7 +53,7 @@ class OpenAIAnswerGenerator(AnswerGenerator):
 
     def generate(self, question: str, evidence: List[Chunk], filters: dict) -> GroundedAnswer:
         if not evidence:
-            return self.fallback.generate(question, evidence, filters)
+            return replace(self.fallback.generate(question, evidence, filters), used_fallback=True)
 
         evidence_text = "\n".join(
             f"[{chunk.chunk_id}] {chunk.patient_name} {chunk.date}: {chunk.text}"
@@ -60,7 +61,7 @@ class OpenAIAnswerGenerator(AnswerGenerator):
         )
         payload = self._call_with_retry(question, evidence_text)
         if payload is None or not payload.answerable or not payload.answer.strip():
-            return self.fallback.generate(question, evidence, filters)
+            return replace(self.fallback.generate(question, evidence, filters), used_fallback=True)
 
         # Never trust evidence ids the model didn't actually receive - a
         # hallucinated id is dropped, and if none are valid we fall back to

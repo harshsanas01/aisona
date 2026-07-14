@@ -33,6 +33,7 @@ def ask(payload: AskRequest, request: Request) -> AskResponse:
         )
     except InvalidDateRangeError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+    latency_ms = round((time.perf_counter() - started) * 1000, 2)
 
     # Structured, PHI-safe: question/answer text is never logged, only
     # shape/outcome metadata.
@@ -43,7 +44,20 @@ def ask(payload: AskRequest, request: Request) -> AskResponse:
         candidate_count=result.retrieval_debug.get('candidate_count'),
         citation_count=len(result.citations),
         answerable=result.answerable,
-        latency_ms=round((time.perf_counter() - started) * 1000, 2),
+        latency_ms=latency_ms,
+    )
+
+    audit_record = container.record_question_audit.execute(
+        result,
+        storage_mode=config.STORAGE_MODE,
+        retrieval_mode=config.RETRIEVAL_MODE,
+        lexical_weight=config.LEXICAL_WEIGHT,
+        semantic_weight=config.SEMANTIC_WEIGHT,
+        top_k=config.TOP_K,
+        relevance_threshold=config.MIN_RELEVANCE_SCORE,
+        answer_mode=config.ANSWER_MODE,
+        provider=config.ANSWER_MODE,
+        latency_ms=latency_ms,
     )
 
     return AskResponse(
@@ -54,6 +68,7 @@ def ask(payload: AskRequest, request: Request) -> AskResponse:
         citations=[CitationOut(**asdict(citation)) for citation in result.citations],
         retrieval_debug=result.retrieval_debug,
         filters=result.filters,
+        request_id=audit_record.request_id,
     )
 
 

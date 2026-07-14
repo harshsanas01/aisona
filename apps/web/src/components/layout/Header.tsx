@@ -5,7 +5,9 @@ import { NAV_ITEMS } from './navItems';
 import { Badge } from '../ui/Badge';
 import { IconButton } from '../ui/IconButton';
 import { Modal } from '../ui/Modal';
+import { Select } from '../ui/Select';
 import { useHealth } from '../../hooks/useHealth';
+import { ROLES, roleLabel, useRole, type Role } from '../../app/RoleContext';
 
 const SHORTCUTS: Array<[string, string]> = [
   ['Ctrl/Cmd + Enter', 'Ask the current question'],
@@ -20,6 +22,7 @@ interface HeaderProps {
 export function Header({ onOpenMobileNav }: HeaderProps) {
   const location = useLocation();
   const { health, online } = useHealth();
+  const { role, setRole } = useRole();
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const active = NAV_ITEMS.find((item) => location.pathname.startsWith(item.path)) ?? NAV_ITEMS[0];
 
@@ -40,6 +43,13 @@ export function Header({ onOpenMobileNav }: HeaderProps) {
       </div>
 
       <div className="app-header-right">
+        <Select
+          aria-label="Acting role"
+          className="header-role-select"
+          value={role}
+          onChange={(e) => setRole(e.target.value as Role)}
+          options={ROLES.map((r) => ({ value: r, label: roleLabel(r) }))}
+        />
         {health?.storage_mode ? <Badge tone="outline">Storage: {health.storage_mode}</Badge> : null}
         {health?.answer_mode ? <Badge tone="outline">Answers: {health.answer_mode}</Badge> : null}
         <Badge tone={online ? 'success' : 'danger'} icon={online ? <CheckCircle2 size={12} /> : <AlertCircle size={12} />}>

@@ -99,6 +99,9 @@ jobs:
           python scripts/evaluate_retrieval.py
           python scripts/evaluate_grounding.py
 
+      - name: Prompt/model/retrieval-config regression gate
+        run: python scripts/prompt_eval.py
+
       - name: Upload evaluation reports
         if: always()
         uses: actions/upload-artifact@v4

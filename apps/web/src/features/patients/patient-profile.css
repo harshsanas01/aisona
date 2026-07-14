@@ -1,0 +1,39 @@
+.patient-summary-header { margin-bottom: var(--space-4); }
+.patient-summary-top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-3); }
+.patient-summary-top h2 { margin: 0; font-size: var(--text-xl); color: var(--color-text-primary); }
+.patient-summary-meta { font-size: var(--text-sm); color: var(--color-text-muted); font-family: var(--font-mono); }
+.patient-summary-stats { display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-3); }
+.patient-summary-disclaimer {
+  font-size: var(--text-xs); color: var(--color-amber-700); background: var(--color-amber-100);
+  border-radius: var(--radius-md); padding: var(--space-2) var(--space-3); margin: 0;
+}
+
+.patient-timeline-filter-row { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-4); }
+
+.patient-timeline-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+.patient-timeline-card { align-items: stretch; }
+.patient-timeline-top { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-2); }
+.patient-timeline-icon { width: 32px; height: 32px; border-radius: var(--radius-md); display: grid; place-items: center; flex-shrink: 0; }
+.patient-timeline-identity { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.patient-timeline-identity strong { font-size: var(--text-base); color: var(--color-text-primary); }
+.patient-timeline-meta { font-size: var(--text-xs); color: var(--color-text-muted); font-family: var(--font-mono); }
+.patient-timeline-description { font-size: var(--text-sm); color: var(--color-text-secondary); margin: 0 0 8px; }
+.patient-timeline-quote {
+  font-size: var(--text-sm); color: var(--color-text-primary); border-left: 2px solid var(--color-brand-500);
+  padding-left: var(--space-3); margin: 0 0 10px;
+}
+.patient-timeline-actions { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); flex-wrap: wrap; }
+.patient-timeline-review-actions { display: flex; gap: var(--space-1); flex-wrap: wrap; }
+.patient-timeline-evidence-btn { border: none; background: transparent; padding: 0; cursor: pointer; }
+.patient-timeline-evidence-btn:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-radius: var(--radius-sm); }
+
+.patient-patterns-section { margin-top: var(--space-6); }
+.patient-patterns-header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-3); }
+.patient-patterns-header h3 { display: flex; align-items: center; gap: var(--space-2); margin: 0; font-size: var(--text-lg); color: var(--color-text-primary); }
+.patient-patterns-section .patient-summary-disclaimer { margin-bottom: var(--space-4); }
+
+.pattern-evidence-trail { display: flex; flex-direction: column; gap: 4px; margin-bottom: var(--space-3); }
+.pattern-evidence-item { justify-content: flex-start; }
+
+.person-mention-correction-row { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-3); flex-wrap: wrap; }
+.person-mention-correction-row .select, .person-mention-correction-row .input { min-width: 160px; }

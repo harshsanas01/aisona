@@ -35,8 +35,12 @@
 .is-answerable .answer-result-status svg { color: var(--color-brand-600); }
 .is-unanswerable .answer-result-status svg { color: var(--color-amber-700); }
 .answer-result-text { color: var(--color-text-primary); line-height: var(--leading-relaxed); margin: 0 0 var(--space-3); }
-.answer-result-meta { display: flex; gap: var(--space-4); color: var(--color-text-muted); font-size: var(--text-xs); }
+.answer-result-meta { display: flex; align-items: center; gap: var(--space-4); color: var(--color-text-muted); font-size: var(--text-xs); }
 .answer-result-meta span { display: inline-flex; align-items: center; gap: 4px; }
+.answer-feedback-controls { margin-left: auto; display: inline-flex; gap: var(--space-2); }
+.answer-feedback-thanks { margin-left: auto; font-style: italic; }
+.answer-feedback-form { display: flex; flex-direction: column; gap: var(--space-3); }
+.answer-feedback-actions { display: flex; justify-content: flex-end; gap: var(--space-2); }
 
 .sources { margin-top: var(--space-5); }
 .sources h3 { font-size: var(--text-base); margin: 0 0 var(--space-3); color: var(--color-text-primary); }

@@ -20,6 +20,9 @@ def health(request: Request) -> Dict[str, object]:
         # Additive fields consumed by the web app's header status badges.
         'storage_mode': config.STORAGE_MODE,
         'answer_mode': config.ANSWER_MODE,
+        # Lets the frontend hide developer-only surfaces (Why this answer?,
+        # Retrieval Lab) instead of showing them and then 403ing.
+        'developer_mode': config.DEVELOPER_MODE,
     }
 
 

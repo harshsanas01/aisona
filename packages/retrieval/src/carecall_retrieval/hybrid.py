@@ -173,6 +173,22 @@ class HybridRetriever(RetrievalService):
         patient_id: Optional[str] = None,
         date_range: Optional[DateRange] = None,
     ) -> List[Chunk]:
+        return [chunk for _, chunk in self.retrieve_with_scores(
+            query, limit=limit, patient_id=patient_id, date_range=date_range,
+        )]
+
+    def retrieve_with_scores(
+        self,
+        query: str,
+        *,
+        limit: Optional[int] = None,
+        patient_id: Optional[str] = None,
+        date_range: Optional[DateRange] = None,
+    ) -> List[ScoredChunk]:
+        """Same ranking as retrieve(), but also returns each chunk's final
+        score (fused score plus any reranking boost) - used by the
+        Retrieval Comparison Lab (developer-only) to make each mode's
+        ranking numerically transparent rather than just showing an order."""
         if not query or not query.strip():
             return []
         top_k = limit if limit is not None else self.default_top_k
@@ -198,8 +214,7 @@ class HybridRetriever(RetrievalService):
         relevant = [item for item in combined if item[0] >= self.min_relevance_score]
         ranked = sorted(relevant, key=lambda item: item[0], reverse=True)
         reranked = self.reranker.rerank(query, ranked)
-        diversified = self._diversify(reranked, top_k)
-        return [chunk for _, chunk in diversified]
+        return self._diversify(reranked, top_k)
 
     def _diversify(self, ranked: List[ScoredChunk], limit: int) -> List[ScoredChunk]:
         selected: List[ScoredChunk] = []

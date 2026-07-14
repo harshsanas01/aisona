@@ -46,7 +46,7 @@ export function Sidebar({ collapsed, onToggleCollapsed, mobileOpen, onCloseMobil
         </div>
 
         <ul className="sidebar-nav">
-          {NAV_ITEMS.map((item) => {
+          {NAV_ITEMS.filter((item) => !item.devOnly || health?.developer_mode).map((item) => {
             const Icon = item.icon;
             return (
               <li key={item.path}>
