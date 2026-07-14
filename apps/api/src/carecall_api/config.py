@@ -52,3 +52,12 @@ AUDIT_RETAIN_QUESTION_PREVIEW = os.getenv('CARECALL_AUDIT_RETAIN_QUESTION_PREVIE
 # Developer/admin-only surfaces (Why-this-answer audit drawer, Retrieval
 # Lab) are hidden by default in production.
 DEVELOPER_MODE = os.getenv('CARECALL_DEVELOPER_MODE', 'false').lower() == 'true'
+
+CORS_ALLOWED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv(
+        "CARECALL_CORS_ALLOWED_ORIGINS",
+        "http://localhost:5173",
+    ).split(",")
+    if origin.strip()
+]

@@ -3,6 +3,7 @@ from carecall_observability import configure_logging
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 from . import config
 from .lifespan import build_container, lifespan
@@ -28,6 +29,13 @@ from .routes import (
 configure_logging(config.LOG_LEVEL)
 
 app = FastAPI(title='CareCall Insight', version='0.1.0', lifespan=lifespan)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=config.CORS_ALLOWED_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.add_middleware(RequestContextMiddleware)
 
 # Also build eagerly at import time: FastAPI's TestClient only triggers the
