@@ -1,0 +1,13 @@
+.calls-filter-row { display: grid; grid-template-columns: 2fr 1.2fr 1fr 1fr auto; gap: var(--space-3); align-items: center; }
+.calls-filter-row .input-with-icon { width: 100%; }
+.calls-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space-4); margin-top: var(--space-5); }
+.call-card { display: flex; flex-direction: column; gap: var(--space-2); align-items: flex-start; }
+.call-card-top { display: flex; align-items: center; justify-content: space-between; width: 100%; color: var(--color-text-primary); }
+.call-card-top strong { font-size: var(--text-base); }
+.call-card-meta { display: flex; flex-direction: column; gap: 4px; font-size: var(--text-xs); color: var(--color-text-muted); }
+.call-card-meta span { display: inline-flex; align-items: center; gap: 5px; }
+.call-card-id { font-family: var(--font-mono); }
+
+@media (max-width: 720px) {
+  .calls-filter-row { grid-template-columns: 1fr; }
+}
