@@ -1,0 +1,22 @@
+{
+  "fingerprint": {
+    "system_prompt_version": "v1",
+    "system_prompt_hash": "f3cce95ed8b57ec6",
+    "timeline_extraction_prompt_version": "v1",
+    "timeline_extraction_prompt_hash": "2d46b06a9a46350f",
+    "brief_prose_prompt_version": "v1",
+    "brief_prose_prompt_hash": "df1e760192a06c9d",
+    "lexical_weight": 0.45,
+    "semantic_weight": 0.55,
+    "min_relevance_score": 0.15,
+    "top_k": 8
+  },
+  "metrics": {
+    "hit_rate": 1.0,
+    "mean_recall": 1.0,
+    "mean_precision": 0.625,
+    "mean_reciprocal_rank": 0.8125,
+    "unanswerable_accuracy": 1.0,
+    "grounding_pass_rate": 1.0
+  }
+}

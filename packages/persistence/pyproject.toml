@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "carecall-persistence"
+version = "0.1.0"
+description = "CareCall Insight repository implementations (in-memory demo mode, PostgreSQL production-like mode)"
+requires-python = ">=3.11"
+dependencies = [
+  "carecall-domain",
+  "carecall-application",
+  "pydantic>=2.7.0",
+]
+
+[project.optional-dependencies]
+postgres = ["sqlalchemy>=2.0.0", "alembic>=1.13.0", "psycopg[binary]>=3.1.0", "pgvector>=0.2.5"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,17 @@
+@import './tokens.css';
+
+:root {
+  font-family: var(--font-sans);
+  line-height: var(--leading-normal);
+  font-weight: var(--weight-regular);
+  color: var(--color-text-primary);
+  background: var(--color-bg);
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--color-bg); color: var(--color-text-primary); }
+button, textarea, input, select { font: inherit; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--color-brand-500); outline-offset: 2px; }
+
+.error { margin-top: 12px; color: var(--color-coral-700); background: var(--color-danger-bg); padding: 10px 12px; border-radius: var(--radius-md); }

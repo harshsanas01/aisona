@@ -1,0 +1,49 @@
+.action-center-filter-card { margin-bottom: var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); }
+.action-center-filter-row { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+.action-center-toolbar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
+
+.action-center-view-toggle { display: flex; border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; }
+.action-center-view-toggle button {
+  display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: none; background: transparent;
+  font-size: var(--text-sm); color: var(--color-text-secondary); cursor: pointer;
+}
+.action-center-view-toggle button.active { background: var(--color-brand-50); color: var(--color-brand-700); font-weight: var(--weight-semibold); }
+
+.task-list { display: flex; flex-direction: column; gap: var(--space-3); }
+.task-card { align-items: stretch; text-align: left; }
+.task-card-top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); margin-bottom: 4px; }
+.task-card-top strong { font-size: var(--text-base); color: var(--color-text-primary); }
+.task-card-meta { font-size: var(--text-xs); color: var(--color-text-muted); display: block; margin-bottom: var(--space-2); }
+.task-card-badges { display: flex; gap: var(--space-1); flex-wrap: wrap; }
+
+.task-board { display: grid; grid-template-columns: repeat(5, minmax(200px, 1fr)); gap: var(--space-3); overflow-x: auto; }
+.task-board-column { display: flex; flex-direction: column; gap: var(--space-2); min-width: 200px; }
+.task-board-column-header { display: flex; align-items: center; justify-content: space-between; padding: 0 2px; }
+.task-board-count { font-size: var(--text-xs); color: var(--color-text-muted); font-family: var(--font-mono); }
+.task-board-column-body { display: flex; flex-direction: column; gap: var(--space-2); min-height: 40px; }
+
+.create-task-form { display: flex; flex-direction: column; gap: var(--space-3); }
+.create-task-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.create-task-evidence-preview {
+  font-size: var(--text-xs); color: var(--color-brand-700); background: var(--color-brand-50);
+  border-radius: var(--radius-md); padding: var(--space-2) var(--space-3);
+}
+.create-task-actions { display: flex; justify-content: flex-end; gap: var(--space-2); }
+
+.task-drawer-content { padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-4); }
+.task-drawer-header h2 { margin: 0 0 var(--space-2); font-size: var(--text-lg); }
+.task-drawer-badges { display: flex; gap: var(--space-1); flex-wrap: wrap; }
+.task-drawer-description { font-size: var(--text-sm); color: var(--color-text-secondary); margin: 0; }
+.task-drawer-meta { display: flex; flex-direction: column; gap: 6px; margin: 0; }
+.task-drawer-meta > div { display: flex; justify-content: space-between; font-size: var(--text-sm); }
+.task-drawer-meta dt { color: var(--color-text-muted); margin: 0; }
+.task-drawer-meta dd { margin: 0; color: var(--color-text-primary); }
+.task-drawer-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.task-drawer-status-actions { display: flex; flex-direction: column; gap: var(--space-2); }
+.task-drawer-status-buttons { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.task-drawer-activity h3 { display: flex; align-items: center; gap: 6px; font-size: var(--text-sm); margin: 0 0 var(--space-2); }
+.task-activity-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+.task-activity-list li { display: flex; flex-direction: column; font-size: var(--text-xs); border-left: 2px solid var(--color-border); padding-left: var(--space-2); }
+.task-activity-action { font-weight: var(--weight-semibold); color: var(--color-text-primary); text-transform: capitalize; }
+.task-activity-transition { color: var(--color-text-secondary); }
+.task-activity-meta { color: var(--color-text-muted); font-family: var(--font-mono); }

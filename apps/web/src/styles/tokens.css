@@ -1,0 +1,154 @@
+/*
+ * CareCall Insight design tokens.
+ * Single source of truth for color, spacing, radius, shadow, typography,
+ * and motion. Components should reference these variables rather than
+ * hard-coding values.
+ */
+:root {
+  color-scheme: light;
+
+  /* ---- Typography ---- */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-md: 1.0625rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 1.875rem;
+
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.65;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* ---- Core neutrals (warm, trustworthy) ---- */
+  --color-bg: #f8f6f2;
+  --color-bg-subtle: #f1efe9;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-border: #e5e0d6;
+  --color-border-strong: #d7d0c1;
+
+  --color-text-primary: #17233d;
+  --color-text-secondary: #4b5468;
+  --color-text-muted: #7c8497;
+  --color-text-inverse: #ffffff;
+
+  /* ---- Brand (teal) ---- */
+  --color-brand-50: #eefbf8;
+  --color-brand-100: #d3f3ec;
+  --color-brand-300: #7bd4c4;
+  --color-brand-500: #0f8f7f;
+  --color-brand-600: #0c7568;
+  --color-brand-700: #0a5f55;
+  --color-brand-contrast: #ffffff;
+
+  /* ---- Navy (nav / primary text surfaces) ---- */
+  --color-navy-900: #101a30;
+  --color-navy-800: #17233d;
+  --color-navy-700: #202f4f;
+  --color-navy-600: #2c3e64;
+
+  /* ---- Accent palette: distinct information categories ---- */
+  --color-coral-500: #e15b4d;
+  --color-coral-100: #fbe4e0;
+  --color-coral-700: #b6392d;
+
+  --color-amber-500: #d98b16;
+  --color-amber-100: #faedd2;
+  --color-amber-700: #9c6208;
+
+  --color-blue-500: #2f6fed;
+  --color-blue-100: #dde7fd;
+  --color-blue-700: #1f4dae;
+
+  --color-violet-500: #7c5cd6;
+  --color-violet-100: #e9e2fa;
+  --color-violet-700: #5a3fab;
+
+  --color-green-500: #3f9142;
+  --color-green-100: #dff0dd;
+  --color-green-700: #2b6b2e;
+
+  --color-rose-500: #d1447a;
+  --color-rose-100: #fbe0ea;
+  --color-rose-700: #a12f5c;
+
+  --color-slate-500: #64748b;
+  --color-slate-100: #e7e9ee;
+  --color-slate-700: #3f4759;
+
+  --color-orange-500: #dd7327;
+  --color-orange-100: #fbe6d2;
+  --color-orange-700: #a3521a;
+
+  --color-cyan-500: #1a8fa3;
+  --color-cyan-100: #d8f1f4;
+  --color-cyan-700: #146575;
+
+  /* ---- Semantic ---- */
+  --color-success: var(--color-green-500);
+  --color-success-bg: var(--color-green-100);
+  --color-warning: var(--color-amber-500);
+  --color-warning-bg: var(--color-amber-100);
+  --color-danger: var(--color-coral-700);
+  --color-danger-bg: var(--color-coral-100);
+  --color-info: var(--color-blue-500);
+  --color-info-bg: var(--color-blue-100);
+
+  /* ---- Spacing scale ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ---- Radius ---- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
+
+  /* ---- Shadow ---- */
+  --shadow-sm: 0 1px 2px rgba(23, 35, 61, 0.06);
+  --shadow-md: 0 6px 20px rgba(23, 35, 61, 0.08);
+  --shadow-lg: 0 16px 40px rgba(23, 35, 61, 0.14);
+  --shadow-focus: 0 0 0 3px rgba(15, 143, 127, 0.35);
+
+  /* ---- Motion ---- */
+  --transition-fast: 120ms ease;
+  --transition-base: 180ms ease;
+  --transition-slow: 260ms ease;
+
+  /* ---- Layout ---- */
+  --sidebar-width: 256px;
+  --sidebar-width-collapsed: 72px;
+  --header-height: 68px;
+  --content-max-width: 1440px;
+  --z-header: 20;
+  --z-sidebar: 30;
+  --z-overlay: 40;
+  --z-drawer: 50;
+  --z-toast: 60;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0ms;
+    --transition-base: 0ms;
+    --transition-slow: 0ms;
+  }
+}

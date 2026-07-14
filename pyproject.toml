@@ -1,0 +1,13 @@
+[tool.ruff]
+line-length = 120
+exclude = [".venv", "node_modules", "dist", "artifacts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+explicit_package_bases = true
+exclude = ["\\.venv", "node_modules", "dist"]

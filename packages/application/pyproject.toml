@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "carecall-application"
+version = "0.1.0"
+description = "CareCall Insight use cases and ports (depends only on carecall-domain)"
+requires-python = ">=3.11"
+dependencies = [
+  "carecall-domain",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,102 +1,117 @@
 # CareCall Insight
 
-CareCall Insight is a small internal QA tool for care coordinators. It loads the provided care-call transcripts, retrieves the most relevant dialogue windows, and returns grounded answers with source citations that can be opened as full transcripts.
+CareCall Insight is an internal QA tool for care coordinators. A coordinator asks a natural-language question about the care-call transcript corpus and gets back a grounded answer with citations (patient, call ID, date, exact turn range, quote) that can be opened as the full source transcript. It also surfaces operational safety-relevant highlights (falls, missed medication, etc.) and supports patient/date filtering.
 
-## 1. What the project does
+This repository started as a timed take-home exercise and has since been evolved into a modular-monolith monorepo: layered domain/application/retrieval/LLM/persistence packages, a PostgreSQL+pgvector production-like storage mode alongside the original in-memory demo mode, durable ingestion, streaming answers, a background embedding worker, CI, and Docker Compose - while preserving every behavior that worked in the original submission.
 
-A care coordinator can type a natural-language question, receive a concise answer grounded in the transcript corpus, inspect the citations used for that answer, and open the complete source transcript directly from the UI.
+## 1. Quick start
 
-## 2. How to run
-
-Prerequisites: Python 3.11+, Node.js 18+, and npm.
+### Demo mode (in-memory, no Docker, no database)
 
 ```bash
 cp .env.example .env
 make setup
-make backend
+make backend     # terminal 1 - FastAPI on :8000
+make web          # terminal 2 - Vite dev server on :5173
 ```
 
-In a second terminal:
+Open http://localhost:5173. Works with no OpenAI key (`CARECALL_ANSWER_MODE=mock` by default) and no PostgreSQL.
+
+### Production-like mode (PostgreSQL + pgvector, one command)
 
 ```bash
-make frontend
+cp .env.example .env
+docker compose up --build
 ```
 
-Add your OpenAI key to .env if you want OpenAI-backed answer generation. Without it, the app runs in mock mode and still provides grounded extractive answers.
+This starts Postgres+pgvector, runs Alembic migrations, then the API (bootstrapping the fixture corpus into the database on first boot), a background embedding worker, and the web app behind nginx (proxying `/api` to the API, with buffering disabled so the streaming endpoint works). Web: http://localhost:5173. API: http://localhost:8000.
 
-## 3. Architecture overview
+## 2. Architecture summary
 
-```text
-React UI
-  ↓
-FastAPI API
-  ↓
-Hybrid Retriever
-  ↓
-Grounded Answer Service
-  ↓
-Validated citations from original transcript metadata
+A modular monolith, not microservices - see [ARCHITECTURE.md](ARCHITECTURE.md) for the full writeup and why.
+
+```
+apps/api      FastAPI delivery layer (routes, DI wiring, middleware)
+apps/web      React + Vite frontend, organized by feature
+apps/worker   Background polling worker (embedding backfill)
+
+packages/domain          Entities, value objects, domain services - no framework imports
+packages/application      Use cases + ports (interfaces) - depends only on domain
+packages/retrieval        Chunking + hybrid lexical/semantic retrieval
+packages/llm              Answer generators (mock/OpenAI) + the grounding pipeline
+packages/persistence      In-memory and PostgreSQL repository implementations
+packages/observability    Structured JSON logging + Prometheus-style metrics
 ```
 
-## 4. Retrieval and chunking decisions
+Every cross-package dependency implements a port defined in `packages/application/ports` - swapping in-memory for PostgreSQL, or mock for OpenAI, never touches a use case or a route.
 
-- The retriever builds overlapping dialogue windows of 2-4 consecutive turns while preserving the original turn numbers and the exact transcript text.
-- Each chunk keeps the patient metadata, date, call ID, and speaker-labelled turns so retrieval can use both lexical and contextual signals.
-- The backend uses a TF-IDF lexical ranker and a lightweight semantic similarity signal from the same chunk text; the full corpus is never sent directly to the LLM.
-- Citation metadata is built server-side from the trusted transcript metadata rather than from LLM-generated text.
+## 3. Features
 
-## 5. Unanswerable behavior
+- Natural-language Q&A grounded in the transcript corpus, with server-owned citations (call/patient/date/turn-range/quote) - never generator-supplied.
+- Hybrid lexical + semantic retrieval with configurable fusion weights, a minimum relevance threshold, evidence diversification by call, and a pluggable reranker interface.
+- A real multi-stage grounding pipeline that rejects out-of-domain questions (weather, sports, crypto, trivia, jokes), medical-advice-seeking questions, and post-generation "does this evidence actually relate to this question" checks - not just a relevance-score cutoff. See [docs/architecture/grounding.md](docs/architecture/grounding.md).
+- Patient and date-range filtering, with an active-filter summary and a distinct "no calls match your filters" empty state.
+- Deterministic, fully-offline safety-relevant highlighting (dizziness, falls/near-falls, missed medication, medication changes, sleep, meals, glucose, respiratory, transportation, home safety) with a legend and category filter in the transcript view - explicitly labeled as operational triage support, not a medical diagnosis.
+- Streaming answers over Server-Sent Events (`POST /api/ask/stream`), with cancellation via `AbortController`; the original synchronous `POST /api/ask` is unchanged.
+- Durable transcript ingestion (`POST /api/calls`, `POST /api/calls/batch`, bounded at 20 per batch) - idempotent on external call ID, and a newly ingested call is searchable immediately (no restart).
+- Two storage modes, one codebase: in-memory (demo) and PostgreSQL+pgvector (production-like), selected by `CARECALL_STORAGE_MODE`.
+- A background worker that backfills pgvector embeddings without ever being required for the API to function.
+- Structured JSON logs, `/api/metrics` (Prometheus text), `/api/health` (liveness) and `/api/readiness`.
 
-Questions that are unsupported by the transcript corpus return an explicit "not enough evidence" response with no citations. The implementation avoids treating negations, third-party mentions, hypothetical questions, and explicit denials as evidence for a participant event.
+## 4. Retrieval and grounding
 
-## 6. Trade-offs and deliberate cuts
+**Retrieval** (`packages/retrieval`): overlapping 2-4 turn dialogue windows per call, scored by an IDF-weighted lexical overlap and a TF-IDF cosine-similarity semantic proxy, fused with configurable weights plus small symptom/name-aware boosts, gated by a minimum relevance threshold, and diversified by call before being capped at top-k. Full algorithm: [docs/architecture/retrieval.md](docs/architecture/retrieval.md).
 
-This implementation prioritizes a complete, trustworthy QA loop over production infrastructure. Deliberately cut items include authentication, deployment, durable storage, production vector infrastructure, background ingestion, and advanced observability.
+**Grounding** (`packages/llm/grounding`, orchestrated by `AskQuestionUseCase`): query validation and scope classification run *before* retrieval; evidence sufficiency and post-generation support validation run *after* generation but *before* the answer ever reaches the caller. This is what makes "What is today's weather in LA?" and "Tell me a joke." return no evidence instead of a confident answer built from an unrelated quote - see [docs/architecture/grounding.md](docs/architecture/grounding.md) for the full pipeline and the specific bug this replaced.
 
-## 7. Production-scale evolution
+## 5. API overview
 
-At production scale, the in-memory corpus would be replaced with asynchronous ingestion into durable storage and a searchable index such as OpenSearch, Elasticsearch, pgvector, or a managed vector database. Incremental embedding jobs, metadata filtering, access controls, audit logging, and monitoring would be added as the corpus grows beyond the exercise dataset.
+Legacy endpoints (preserved exactly, still what the frontend uses):
 
-## 8. One more day
+```
+GET  /api/health
+GET  /api/readiness
+GET  /api/metrics
+GET  /api/calls
+GET  /api/calls/{call_id}
+GET  /api/patients
+GET  /api/safety-events?call_id=&category=
+POST /api/ask
+POST /api/ask/stream        (SSE)
+POST /api/calls              (ingest one call)
+POST /api/calls/batch        (ingest up to 20 calls)
+```
 
-With one more day, I would add stronger evaluation, date and patient filters, better ranking, an ingestion endpoint, safety-relevant highlighting, and better observability.
+`POST /api/ask` request: `{"question": str, "patient_id": str|null, "start_date": "YYYY-MM-DD"|null, "end_date": "YYYY-MM-DD"|null}`. Response includes `citations`, `retrieval_debug`, and the `filters` actually applied. An invalid date range (`start_date` after `end_date`) returns 422.
 
-## 9. AI-tool disclosure
+## 6. Evaluation results
 
-AI coding tools helped accelerate scaffolding, test generation, and implementation review; I verified and understood all submitted code.
+```
+make eval
+```
 
-## Debrief Notes
+- Original 8-question retrieval set: **8/8** hit rate (every expected call cited).
+- Retrieval metrics (`scripts/evaluate_retrieval.py`): mean recall 1.00, mean precision 0.62, mean reciprocal rank 0.81, unanswerable accuracy 100%.
+- Grounded-answer evaluation (`scripts/evaluate_grounding.py`, deterministic structural/lexical checks - not an LLM judge): **19/19** passed across the original 8 plus 11 adversarial questions (4 out-of-domain, 2 medical-advice, 3 fall-attribution/third-party, 1 chest-pain) - every citation resolves to a real call/turn range with a verbatim quote, no citations on unanswerable responses, and the fall-attribution questions never misattribute Gus's fall to Samuel or Margaret.
 
-### Demo flow
+## 7. Known limitations
 
-1. Ask about dizziness in June.
-2. Show the answer and the two cited calls.
-3. Open one transcript and show the highlighted evidence.
-4. Ask about falls.
-5. Show that the system refuses to claim a fall without evidence.
+- The "semantic" retrieval signal is a TF-IDF cosine-similarity proxy, not a learned embedding - it won't generalize to true synonyms with zero lexical overlap. Real embeddings (OpenAI or the worker's mock embedding) exist in the pgvector column but aren't yet wired into a query-time semantic search path - see [ARCHITECTURE.md](ARCHITECTURE.md) roadmap.
+- The out-of-domain/medical-advice query classifier is a topic-category keyword list, not a learned classifier - broad enough to generalize past the specific adversarial test questions, but not exhaustive.
+- The mock answer generator is genuinely extractive (quotes the real top-matched turn) but is not a real language model - OpenAI mode is required for fluent, synthesized answers.
+- No authentication/authorization is implemented (not requested; would be required before any real deployment).
+- Evaluation is still a curated question set (8 + 11), not a large held-out benchmark.
 
-### Architecture explanation
+## 8. Security and privacy notes
 
-- Retrieval happens before generation so the answer is grounded in evidence instead of free-form generation.
-- Chunks preserve dialogue context so adjacent turns remain available to the retriever and the UI.
-- Citation metadata is server-owned and mapped back to the original transcript turns.
-- Mock mode is supported so the app remains usable without an OpenAI key.
-- The retriever can be swapped out at production scale without changing the API contract.
+The dataset is fictional, but the code is written as if it weren't: no API keys ever reach the browser bundle or logs, structured logs never contain question/answer/transcript text (see [packages/observability](packages/observability)), CORS should be restricted to known origins in any real deployment (currently permissive for local dev), and batch ingestion is bounded. **This is not a HIPAA-compliant system and makes no such claim** - a real deployment over real PHI would need, at minimum, authentication/authorization, encryption at rest, an audit trail beyond `question_audit`, and a signed BAA with every subprocessor.
 
-### Known limitations
+## 9. Roadmap
 
-- The corpus is small and in memory.
-- Evaluation is limited to the supplied question set.
-- API latency and model cost depend on the configured answer mode.
-- Ranking thresholds are heuristic rather than tuned on a large production dataset.
-- No production privacy controls or durable ingestion pipeline are implemented.
+1. Wire a real embedding-backed semantic search path (query-time OpenAI or local embeddings) behind the existing `SemanticScorer` interface - the pgvector column and worker backfill already exist.
+2. Learned/LLM-assisted query intent classification behind the existing `AnswerabilityGate.is_query_out_of_scope` extension point, replacing the keyword deny-list.
+3. Authentication/authorization and per-coordinator access scoping.
 
-### Likely hands-on questions
+## 10. AI-tool disclosure
 
-- Where is retrieval ranking implemented? In [backend/app/retrieval.py](backend/app/retrieval.py).
-- How is an exact citation mapped back to transcript turns? Through the chunk metadata and the turn range stored in the citation objects.
-- What happens when OpenAI fails? The app falls back to the mock answer mode.
-- How would you ingest a new call? By adding a new JSON record and extending the ingestion pipeline.
-- Why not send all transcripts to the LLM? To keep the prompt small, reduce cost, and preserve grounding.
-- Why hybrid search instead of only keyword search? Lexical matching is strong for names and symptoms, while semantic similarity helps with paraphrases such as "trouble sleeping".
-- How do you prevent a third party mentioned in a call from being treated as a participant? The app only answers from transcript evidence tied to the corpus participants and uses explicit grounding checks for unsupported questions.
+AI coding tools (Claude Code) were used extensively to accelerate this refactor - scaffolding the layered packages, writing tests, and reviewing/debugging the grounding pipeline. Every change was verified by running the actual test suite, evaluation scripts, and a live browser session (via Playwright) against the real running application, not just written and assumed correct.

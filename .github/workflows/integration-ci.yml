@@ -1,0 +1,88 @@
+name: Integration CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: integration-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_DB: carecall
+          POSTGRES_USER: carecall
+          POSTGRES_PASSWORD: carecall
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U carecall -d carecall"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql+psycopg://carecall:carecall@localhost:5432/carecall
+      CARECALL_STORAGE_MODE: postgres
+      CARECALL_ANSWER_MODE: mock
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install packages
+        run: |
+          pip install --upgrade pip
+          pip install \
+            -e packages/domain \
+            -e packages/application \
+            -e packages/retrieval \
+            -e packages/llm \
+            -e "packages/persistence[postgres]" \
+            -e packages/observability \
+            -e "apps/api[dev,postgres]"
+
+      - name: Apply migrations
+        working-directory: packages/persistence
+        run: alembic upgrade head
+
+      - name: Start API (production-like mode, bootstraps fixture data on first boot)
+        run: |
+          nohup uvicorn carecall_api.main:app --app-dir apps/api/src --port 8000 > api.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:8000/api/health >/dev/null && break
+            sleep 1
+          done
+          curl -sf http://localhost:8000/api/health
+
+      - name: Seed fixture data via the real ingestion endpoint (idempotency check)
+        run: python scripts/ingest_fixture_data.py http://localhost:8000
+
+      - name: Run evaluation suite
+        run: |
+          python scripts/evaluate.py
+          python scripts/evaluate_retrieval.py
+          python scripts/evaluate_grounding.py
+
+      - name: Run smoke test
+        run: python scripts/smoke_test.py http://localhost:8000
+
+      - name: Dump API logs on failure
+        if: failure()
+        run: cat api.log || true
+
+      - name: Upload evaluation reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-evaluation-reports
+          path: artifacts/
+          if-no-files-found: ignore
