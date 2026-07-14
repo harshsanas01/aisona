@@ -7,6 +7,7 @@ interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   active?: boolean;
   size?: 'sm' | 'md';
   showTooltip?: boolean;
+  tooltipPlacement?: 'top' | 'bottom';
 }
 
 export function IconButton({
@@ -15,6 +16,7 @@ export function IconButton({
   active = false,
   size = 'md',
   showTooltip = true,
+  tooltipPlacement = 'top',
   className = '',
   ...rest
 }: IconButtonProps) {
@@ -29,5 +31,5 @@ export function IconButton({
   );
 
   if (!showTooltip) return button;
-  return <Tooltip label={label}>{button}</Tooltip>;
+  return <Tooltip label={label} placement={tooltipPlacement}>{button}</Tooltip>;
 }

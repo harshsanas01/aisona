@@ -108,12 +108,84 @@ export async function getPatients() {
   return body.patients;
 }
 
-export async function getSafetyEvents(callId?: string) {
-  const url = callId ? `${API_BASE}/safety-events?call_id=${encodeURIComponent(callId)}` : `${API_BASE}/safety-events`;
-  const response = await fetch(url);
+export interface SafetyEventsParams {
+  callId?: string | null;
+  category?: string | null;
+}
+
+export async function getSafetyEvents(params: string | SafetyEventsParams = {}) {
+  const { callId, category } = typeof params === 'string' ? { callId: params, category: null } : params;
+  const query = new URLSearchParams();
+  if (callId) query.set('call_id', callId);
+  if (category) query.set('category', category);
+  const qs = query.toString();
+  const response = await fetch(`${API_BASE}/safety-events${qs ? `?${qs}` : ''}`);
   if (!response.ok) {
     throw new Error('Failed to load safety events');
   }
   const body = await response.json();
   return body.safety_events;
+}
+
+export async function getCalls() {
+  const response = await fetch(`${API_BASE}/calls`);
+  if (!response.ok) {
+    throw new Error('Failed to load calls');
+  }
+  const body = await response.json();
+  return body.calls;
+}
+
+export interface HealthStatus {
+  status: string;
+  calls_loaded: number;
+  retrieval_mode: string;
+  storage_mode?: string;
+  answer_mode?: string;
+}
+
+export async function getHealth(): Promise<HealthStatus> {
+  const response = await fetch(`${API_BASE}/health`);
+  if (!response.ok) {
+    throw new Error('API is unavailable');
+  }
+  return response.json();
+}
+
+export interface IngestResult {
+  call_id: string;
+  status: string;
+  chunk_count: number;
+  error: string;
+}
+
+function formatErrorDetail(raw: string): string {
+  try {
+    const parsed = JSON.parse(raw);
+    if (typeof parsed.detail === 'string') return parsed.detail;
+    if (Array.isArray(parsed.detail)) {
+      return parsed.detail
+        .map((item: { loc?: unknown[]; msg?: string }) => {
+          const path = Array.isArray(item.loc) ? item.loc.filter((p) => p !== 'body').join(' > ') : '';
+          return path ? `${path}: ${item.msg}` : item.msg;
+        })
+        .join('; ');
+    }
+  } catch {
+    // Not JSON - fall through to the raw text.
+  }
+  return raw;
+}
+
+export async function ingestCallsBatch(calls: unknown[]): Promise<IngestResult[]> {
+  const response = await fetch(`${API_BASE}/calls/batch`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ calls }),
+  });
+  if (!response.ok) {
+    const detail = await response.text().catch(() => '');
+    throw new Error(formatErrorDetail(detail) || 'Ingestion failed');
+  }
+  return response.json();
 }

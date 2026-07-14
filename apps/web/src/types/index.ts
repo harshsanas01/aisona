@@ -51,6 +51,12 @@ export interface Patient {
   age: number;
 }
 
+export interface CallSummary {
+  call_id: string;
+  date: string;
+  patient_name: string;
+}
+
 export interface SafetyEvent {
   category: string;
   severity: string;
