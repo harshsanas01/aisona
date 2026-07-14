@@ -1,5 +1,8 @@
+import { Loader2, Radar, X } from 'lucide-react';
 import type { Citation } from '../../types';
 import type { StreamPhase } from './useStreamingAnswer';
+import { Button } from '../../components/ui/Button';
+import { SourceCard } from '../../components/ui/SourceCard';
 
 interface StreamingAnswerCardProps {
   phase: StreamPhase;
@@ -35,42 +38,36 @@ export function StreamingAnswerCard({
   const isActive = phase === 'retrieving' || phase === 'generating';
 
   return (
-    <div className="answer-card streaming-card">
-      <div className="answer-header">
-        <strong>{PHASE_LABEL[phase]}</strong>
+    <div className={`answer-result-card ${answerable === false ? 'is-unanswerable' : 'is-answerable'}`}>
+      <div className="answer-result-header">
+        <span className="answer-result-status">
+          {isActive ? <Loader2 size={16} className="spin-icon" aria-hidden="true" /> : null}
+          {PHASE_LABEL[phase]}
+        </span>
         {isActive ? (
-          <button type="button" className="secondary" onClick={onCancel}>Cancel</button>
+          <Button variant="ghost" size="sm" leftIcon={<X size={13} />} onClick={onCancel}>Cancel</Button>
         ) : null}
       </div>
 
-      {error ? <div className="error">{error}</div> : null}
+      {error ? <div className="error" role="alert">{error}</div> : null}
 
-      <p>
+      <p className="answer-result-text">
         {answerText}
         {phase === 'generating' ? <span className="stream-cursor">▍</span> : null}
       </p>
 
-      <div className="debug-row">
-        <span>{candidateCount} candidates</span>
+      <div className="answer-result-meta">
+        <span><Radar size={12} aria-hidden="true" /> {candidateCount} candidates</span>
       </div>
 
       {phase === 'done' && answerable && citations.length ? (
         <div className="sources">
           <h3>Sources</h3>
-          {citations.map((citation, index) => (
-            <button
-              key={`${citation.call_id}-${index}`}
-              className="source-card"
-              onClick={() => onOpenCitation(citation)}
-            >
-              <div className="source-topline">
-                <strong>{citation.patient_name}</strong>
-                <span>{citation.date}</span>
-              </div>
-              <div className="source-meta">{citation.call_id} · turns {citation.turn_start}-{citation.turn_end}</div>
-              <p>{citation.quote}</p>
-            </button>
-          ))}
+          <div className="source-list">
+            {citations.map((citation, index) => (
+              <SourceCard key={`${citation.call_id}-${index}`} citation={citation} order={index + 1} onOpen={onOpenCitation} />
+            ))}
+          </div>
         </div>
       ) : null}
     </div>

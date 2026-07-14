@@ -1,5 +1,11 @@
+import { useId, useState } from 'react';
+import { SlidersHorizontal } from 'lucide-react';
 import { usePatients } from './usePatients';
 import type { Filters } from '../../hooks/useAskQuestion';
+import { Select } from '../../components/ui/Select';
+import { DateInput } from '../../components/ui/DateInput';
+import { FilterChip } from '../../components/ui/FilterChip';
+import { Button } from '../../components/ui/Button';
 
 interface PatientFilterPanelProps {
   filters: Filters;
@@ -8,59 +14,62 @@ interface PatientFilterPanelProps {
 
 export function PatientFilterPanel({ filters, onChange }: PatientFilterPanelProps) {
   const patients = usePatients();
-  const hasActiveFilters = Boolean(filters.patientId || filters.startDate || filters.endDate);
+  const panelId = useId();
+  const [expanded, setExpanded] = useState(false);
+  const activeCount = [filters.patientId, filters.startDate, filters.endDate].filter(Boolean).length;
+  const hasActiveFilters = activeCount > 0;
 
   const patientName = filters.patientId
     ? patients.find((p) => p.id === filters.patientId)?.name ?? filters.patientId
     : null;
 
+  const clearAll = () => onChange({ patientId: null, startDate: null, endDate: null });
+
   return (
-    <div className="filter-panel">
-      <div className="filter-row">
-        <label className="field-label" htmlFor="patient-filter">Patient</label>
-        <select
-          id="patient-filter"
-          value={filters.patientId ?? ''}
-          onChange={(event) => onChange({ ...filters, patientId: event.target.value || null })}
+    <div className="ask-filter-bar">
+      <div className="ask-filter-toggle-row">
+        <button
+          type="button"
+          className="filter-chip"
+          aria-expanded={expanded}
+          aria-controls={panelId}
+          onClick={() => setExpanded((prev) => !prev)}
         >
-          <option value="">All patients</option>
-          {patients.map((patient) => (
-            <option key={patient.id} value={patient.id}>{patient.name}</option>
-          ))}
-        </select>
+          <SlidersHorizontal size={13} aria-hidden="true" />
+          Filters {hasActiveFilters ? `(${activeCount})` : ''}
+        </button>
+
+        {patientName ? (
+          <FilterChip active onRemove={() => onChange({ ...filters, patientId: null })}>{patientName}</FilterChip>
+        ) : null}
+        {filters.startDate ? (
+          <FilterChip active onRemove={() => onChange({ ...filters, startDate: null })}>From {filters.startDate}</FilterChip>
+        ) : null}
+        {filters.endDate ? (
+          <FilterChip active onRemove={() => onChange({ ...filters, endDate: null })}>To {filters.endDate}</FilterChip>
+        ) : null}
+        {hasActiveFilters ? <Button variant="ghost" size="sm" onClick={clearAll}>Clear all</Button> : null}
       </div>
 
-      <div className="filter-row">
-        <label className="field-label" htmlFor="start-date-filter">From</label>
-        <input
-          id="start-date-filter"
-          type="date"
-          value={filters.startDate ?? ''}
-          onChange={(event) => onChange({ ...filters, startDate: event.target.value || null })}
-        />
-        <label className="field-label" htmlFor="end-date-filter">To</label>
-        <input
-          id="end-date-filter"
-          type="date"
-          value={filters.endDate ?? ''}
-          onChange={(event) => onChange({ ...filters, endDate: event.target.value || null })}
-        />
-      </div>
-
-      {hasActiveFilters ? (
-        <div className="active-filters">
-          <span>
-            Filtering by{patientName ? ` ${patientName}` : ''}
-            {filters.startDate ? ` from ${filters.startDate}` : ''}
-            {filters.endDate ? ` to ${filters.endDate}` : ''}
-          </span>
-          <button
-            type="button"
-            className="secondary"
-            onClick={() => onChange({ patientId: null, startDate: null, endDate: null })}
-          >
-            Clear filters
-          </button>
+      {expanded ? (
+        <div id={panelId} className="ask-filter-panel">
+          <Select
+            label="Patient"
+            placeholder="All patients"
+            options={patients.map((patient) => ({ value: patient.id, label: patient.name }))}
+            value={filters.patientId ?? ''}
+            onChange={(event) => onChange({ ...filters, patientId: event.target.value || null })}
+          />
+          <DateInput
+            label="From"
+            value={filters.startDate ?? ''}
+            onChange={(event) => onChange({ ...filters, startDate: event.target.value || null })}
+          />
+          <DateInput
+            label="To"
+            value={filters.endDate ?? ''}
+            onChange={(event) => onChange({ ...filters, endDate: event.target.value || null })}
+          />
         </div>
       ) : null}
     </div>

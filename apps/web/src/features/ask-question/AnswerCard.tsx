@@ -1,8 +1,12 @@
+import { CheckCircle2, HelpCircle, Layers, Radar } from 'lucide-react';
 import type { AskResponse } from '../../types';
+import { Badge, type BadgeTone } from '../../components/ui/Badge';
 
 interface AnswerCardProps {
   answer: AskResponse;
 }
+
+const CONFIDENCE_TONE: Record<string, BadgeTone> = { high: 'success', medium: 'brand', low: 'neutral' };
 
 export function AnswerCard({ answer }: AnswerCardProps) {
   const hasActiveFilters = Boolean(
@@ -21,15 +25,18 @@ export function AnswerCard({ answer }: AnswerCardProps) {
     : answer.answer;
 
   return (
-    <div className="answer-card">
-      <div className="answer-header">
-        <strong>{label}</strong>
-        <span className="pill">{answer.confidence}</span>
+    <div className={`answer-result-card ${answer.answerable ? 'is-answerable' : 'is-unanswerable'}`}>
+      <div className="answer-result-header">
+        <span className="answer-result-status">
+          {answer.answerable ? <CheckCircle2 size={16} aria-hidden="true" /> : <HelpCircle size={16} aria-hidden="true" />}
+          {label}
+        </span>
+        <Badge tone={CONFIDENCE_TONE[answer.confidence] ?? 'neutral'}>{answer.confidence} confidence</Badge>
       </div>
-      <p>{message}</p>
-      <div className="debug-row">
-        <span>{answer.retrieval_debug.mode}</span>
-        <span>{answer.retrieval_debug.candidate_count} candidates</span>
+      <p className="answer-result-text">{message}</p>
+      <div className="answer-result-meta">
+        <span><Radar size={12} aria-hidden="true" /> {answer.retrieval_debug.mode}</span>
+        <span><Layers size={12} aria-hidden="true" /> {answer.retrieval_debug.candidate_count} candidates</span>
       </div>
     </div>
   );

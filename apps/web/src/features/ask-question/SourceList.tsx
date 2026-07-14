@@ -1,4 +1,5 @@
 import type { Citation } from '../../types';
+import { SourceCard } from '../../components/ui/SourceCard';
 
 interface SourceListProps {
   citations: Citation[];
@@ -10,20 +11,11 @@ export function SourceList({ citations, onOpenCitation }: SourceListProps) {
   return (
     <div className="sources">
       <h3>Sources</h3>
-      {citations.map((citation, index) => (
-        <button
-          key={`${citation.call_id}-${index}`}
-          className="source-card"
-          onClick={() => onOpenCitation(citation)}
-        >
-          <div className="source-topline">
-            <strong>{citation.patient_name}</strong>
-            <span>{citation.date}</span>
-          </div>
-          <div className="source-meta">{citation.call_id} · turns {citation.turn_start}-{citation.turn_end}</div>
-          <p>{citation.quote}</p>
-        </button>
-      ))}
+      <div className="source-list">
+        {citations.map((citation, index) => (
+          <SourceCard key={`${citation.call_id}-${index}`} citation={citation} order={index + 1} onOpen={onOpenCitation} />
+        ))}
+      </div>
     </div>
   );
 }
