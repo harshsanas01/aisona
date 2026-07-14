@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
-from .transcript import Turn
 from .citation import Citation
+from .transcript import Turn
 
 
 @dataclass(frozen=True)

@@ -2,9 +2,8 @@ import json
 from pathlib import Path
 from typing import List
 
+from carecall_domain import Call, DuplicateCallError, Patient, TranscriptDataError, Turn
 from pydantic import BaseModel, ConfigDict
-
-from carecall_domain import Call, Patient, Turn, TranscriptDataError, DuplicateCallError
 
 
 class _TurnModel(BaseModel):

@@ -1,14 +1,18 @@
+from carecall_domain import TranscriptDataError
+from carecall_observability import configure_logging
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
-from carecall_domain import TranscriptDataError
-
 from . import config
 from .lifespan import build_container, lifespan
-from .routes import calls, health, ingestion, patients, questions, safety
+from .middleware import RequestContextMiddleware
+from .routes import calls, health, ingestion, metrics, patients, questions, safety
+
+configure_logging(config.LOG_LEVEL)
 
 app = FastAPI(title='CareCall Insight', version='0.1.0', lifespan=lifespan)
+app.add_middleware(RequestContextMiddleware)
 
 # Also build eagerly at import time: FastAPI's TestClient only triggers the
 # lifespan context manager when used as `with TestClient(app) as client`,
@@ -31,6 +35,7 @@ app.include_router(questions.router)
 app.include_router(ingestion.router)
 app.include_router(patients.router)
 app.include_router(safety.router)
+app.include_router(metrics.router)
 
 
 if __name__ == '__main__':

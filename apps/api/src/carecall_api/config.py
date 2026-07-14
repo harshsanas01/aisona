@@ -39,3 +39,6 @@ MIN_RELEVANCE_SCORE = float(os.getenv('CARECALL_MIN_RELEVANCE_SCORE', '0.15'))
 DATABASE_URL = os.getenv('DATABASE_URL', '')
 
 BACKEND_PORT = int(os.getenv('BACKEND_PORT', '8000'))
+
+# Observability
+LOG_LEVEL = os.getenv('CARECALL_LOG_LEVEL', 'INFO').upper()

@@ -1,9 +1,8 @@
 from typing import List
 
+from carecall_domain import Call, DuplicateCallError, Patient, Turn
 from fastapi import APIRouter, HTTPException, Request, status
 from pydantic import BaseModel, Field
-
-from carecall_domain import Call, DuplicateCallError, Patient, Turn
 
 router = APIRouter()
 

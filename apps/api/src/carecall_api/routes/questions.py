@@ -1,14 +1,18 @@
 import json
+import logging
+import time
 from dataclasses import asdict
 
+from carecall_domain import InvalidDateRangeError
+from carecall_observability import log_event
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import StreamingResponse
 
-from carecall_domain import InvalidDateRangeError
-
+from .. import config
 from ..schemas import AskRequest, AskResponse, CitationOut
 
 router = APIRouter()
+logger = logging.getLogger('carecall_api.questions')
 
 
 @router.post('/api/ask', response_model=AskResponse)
@@ -19,6 +23,7 @@ def ask(payload: AskRequest, request: Request) -> AskResponse:
     if not payload.question or not payload.question.strip():
         raise HTTPException(status_code=422, detail='Question must not be empty')
 
+    started = time.perf_counter()
     try:
         result = container.ask_question.execute(
             payload.question,
@@ -28,6 +33,18 @@ def ask(payload: AskRequest, request: Request) -> AskResponse:
         )
     except InvalidDateRangeError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+    # Structured, PHI-safe: question/answer text is never logged, only
+    # shape/outcome metadata.
+    log_event(
+        logger, 'ask_completed',
+        retrieval_mode=result.retrieval_debug.get('mode'),
+        answer_mode=config.ANSWER_MODE,
+        candidate_count=result.retrieval_debug.get('candidate_count'),
+        citation_count=len(result.citations),
+        answerable=result.answerable,
+        latency_ms=round((time.perf_counter() - started) * 1000, 2),
+    )
 
     return AskResponse(
         question=result.question,

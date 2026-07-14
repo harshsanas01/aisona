@@ -1,11 +1,10 @@
 import hashlib
 from typing import List, Optional
 
-from sqlalchemy import select
-from sqlalchemy.orm import sessionmaker
-
 from carecall_application.ports.repositories import CallRepository, ChunkRepository, PatientRepository
 from carecall_domain import Call, Chunk, DuplicateCallError, Patient, Turn
+from sqlalchemy import select
+from sqlalchemy.orm import sessionmaker
 
 from .models import CallRow, PatientRow, TranscriptChunkRow, TranscriptTurnRow
 

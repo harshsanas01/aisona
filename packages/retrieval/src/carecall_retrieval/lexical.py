@@ -4,9 +4,8 @@ import re
 from collections import Counter
 from typing import List
 
-from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
-
 from carecall_domain import Chunk
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
 # Query terms shorter than this or in the stopword list are dropped before
 # lexical scoring so that filler words can't manufacture false overlap.

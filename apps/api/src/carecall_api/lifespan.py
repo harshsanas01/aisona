@@ -1,8 +1,5 @@
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
-from typing import Union
-
-from fastapi import FastAPI
 
 from carecall_application.ports.repositories import CallRepository, ChunkRepository, PatientRepository
 from carecall_application.use_cases import (
@@ -27,6 +24,7 @@ from carecall_persistence.in_memory import (
     load_calls_from_json,
 )
 from carecall_retrieval import HybridRetriever, build_chunks
+from fastapi import FastAPI
 
 from . import config
 

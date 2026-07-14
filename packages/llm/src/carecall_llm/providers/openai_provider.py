@@ -6,11 +6,10 @@ import time
 from typing import List, Optional
 
 import openai
-from openai import OpenAI
-
 from carecall_application.dto.answer import GroundedAnswer
 from carecall_application.ports.answer_generator import AnswerGenerator
 from carecall_domain import Chunk
+from openai import OpenAI
 
 from ..prompts import PROMPT_VERSION, SYSTEM_PROMPT
 from ..schemas import OpenAIStructuredAnswer

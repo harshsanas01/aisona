@@ -1,5 +1,5 @@
 from .loader import load_calls_from_json
-from .repositories import InMemoryCallRepository, InMemoryPatientRepository, InMemoryChunkRepository
+from .repositories import InMemoryCallRepository, InMemoryChunkRepository, InMemoryPatientRepository
 
 __all__ = [
     "load_calls_from_json",

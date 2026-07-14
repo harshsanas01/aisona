@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-from carecall_domain import Call, Patient, Chunk
+from carecall_domain import Call, Chunk, Patient
 
 
 class CallRepository(ABC):

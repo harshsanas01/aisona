@@ -4,11 +4,11 @@ from carecall_domain import Chunk, DateRange
 
 from ..dto.ask_result import AskQuestionResult
 from ..dto.stream_event import StreamEvent
-from ..ports.retrieval_service import RetrievalService
 from ..ports.answer_generator import AnswerGenerator
 from ..ports.answerability_gate import AnswerabilityGate
-from ..ports.support_validator import SupportValidator
 from ..ports.citation_validator import CitationValidator
+from ..ports.retrieval_service import RetrievalService
+from ..ports.support_validator import SupportValidator
 
 UNANSWERABLE_MESSAGE = (
     "The care-call transcripts do not contain enough evidence to answer this question."

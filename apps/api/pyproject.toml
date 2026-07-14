@@ -17,6 +17,7 @@ dependencies = [
   "carecall-retrieval",
   "carecall-llm",
   "carecall-persistence",
+  "carecall-observability",
 ]
 
 [project.optional-dependencies]

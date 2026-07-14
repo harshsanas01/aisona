@@ -1,5 +1,5 @@
 import re
-from typing import List, Optional
+from typing import List
 
 from carecall_application.dto.answer import GroundedAnswer
 from carecall_application.ports.answer_generator import AnswerGenerator
