@@ -1,3 +1,2 @@
-export { SafetyLegend } from './SafetyLegend';
 export { useSafetyEvents } from './useSafetyEvents';
-export { safetyCategoryMeta } from './safetyCategories';
+export { safetyCategoryMeta, severityLabel, SAFETY_CATEGORY_META } from './safetyCategories';
