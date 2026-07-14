@@ -8,5 +8,5 @@
     "outDir": "node_modules/.tsbuild",
     "lib": ["ES2020"]
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts", "vitest.config.ts"]
 }

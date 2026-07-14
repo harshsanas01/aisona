@@ -65,7 +65,7 @@ export function TranscriptPanel({
                         <span
                           key={`${event.category}-${index}`}
                           className="safety-badge"
-                          style={{ background: meta.color }}
+                          style={{ background: meta.dot }}
                           title={event.explanation}
                         >
                           {meta.label} · {event.severity}

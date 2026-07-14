@@ -31,10 +31,10 @@ export function SafetyLegend({ events, activeCategory, onCategoryChange }: Safet
               key={category}
               type="button"
               className={`safety-chip ${activeCategory === category ? 'active' : ''}`}
-              style={{ borderColor: meta.color }}
+              style={{ borderColor: meta.dot }}
               onClick={() => onCategoryChange(activeCategory === category ? null : category)}
             >
-              <span className="safety-dot" style={{ background: meta.color }} />
+              <span className="safety-dot" style={{ background: meta.dot }} />
               {meta.label}
             </button>
           );
