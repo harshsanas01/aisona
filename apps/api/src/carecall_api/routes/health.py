@@ -2,6 +2,8 @@ from typing import Dict
 
 from fastapi import APIRouter, HTTPException, Request
 
+from .. import config
+
 router = APIRouter()
 
 
@@ -15,6 +17,9 @@ def health(request: Request) -> Dict[str, object]:
         'status': 'ok',
         'calls_loaded': len(container.call_repository.list_calls()),
         'retrieval_mode': 'hybrid',
+        # Additive fields consumed by the web app's header status badges.
+        'storage_mode': config.STORAGE_MODE,
+        'answer_mode': config.ANSWER_MODE,
     }
 
 
